@@ -1,5 +1,7 @@
 //import { combineReducers } from 'redux';
-import { CATEGORIES_LOADED, POSTS_LOADED } from '../actions';
+import { CATEGORIES_LOADED } from '../actions/categories';
+import { POSTS_LOADED, POST_LOADED } from '../actions/posts';
+import { COMMENTS_LOADED } from '../actions/comments';
 
 const initialState = {
 	allCategories: [],
@@ -17,6 +19,16 @@ const app = (state = initialState, action) => {
 			return {
 				...state,
 				allPosts: action.posts
+			};
+		case POST_LOADED:
+			return {
+				...state,
+				post: action.post
+			};
+		case COMMENTS_LOADED:
+			return {
+				...state,
+				comments: action.comments
 			};
 		default:
 			return state;

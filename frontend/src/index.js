@@ -5,7 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 //import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
-import { fetchCategories, fetchPosts } from './actions';
+import { fetchCategories } from './actions/categories';
+import { fetchPosts } from './actions/posts';
 import App from './App';
 import './index.css';
 

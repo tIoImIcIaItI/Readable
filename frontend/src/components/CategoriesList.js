@@ -12,14 +12,19 @@ class CategoriesList extends Component {
 	render() {
 		return (
 			<div>
-				CategoriesList
-				list all available categories, which should link to a category view for that category
+				<h1>Categories</h1>
 				<ul>
+					{!this.props.match || !this.props.match.params.category ?
+						<p>All Categories</p> :
+						<li key={-1}>
+							<Link to={'/'}>All Categories</Link>
+						</li>
+					}
 					{this.props.categories.map(category =>
 						<li key={category.name}>
-							{!this.props.match || this.props.match.params.category === category.name ? 
-							<p>{category.name}</p> : 
-							<Link to={`/${category.path}`}>{category.name}</Link>
+							{!this.props.match || this.props.match.params.category === category.name ?
+								<p>{category.name}</p> :
+								<Link to={`/${category.path}`}>{category.name}</Link>
 							}
 						</li>
 					)}

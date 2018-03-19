@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PostsSortSelector from './PostsSortSelector';
 
-const orderBy = (arr, prop) => arr.sort((x, y) => x[prop] - y[prop]);
-const orderByDescending = (arr, prop) => arr.sort((x, y) => y[prop] - x[prop]);
+const orderBy = (arr, prop) => (arr || []).sort((x, y) => x[prop] - y[prop]);
+const orderByDescending = (arr, prop) => (arr || []).sort((x, y) => y[prop] - x[prop]);
 const sortBy = (arr, prop, ascending) => ascending ? orderBy(arr, prop) : orderByDescending(arr, prop);
-const	filterBy = (arr, prop, value) => (arr || []).filter(x => !value || x[prop] === value);
+const filterBy = (arr, prop, value) => (arr || []).filter(x => !value || x[prop] === value);
+
+// TODO: Posts and comments, in all views where they are displayed, 
+// should display their current score and should have controls to increment or decrement the voteScore for the object. 
+// Posts should display the number of comments associated with the post.
 
 class PostsList extends Component {
 
@@ -36,7 +40,7 @@ class PostsList extends Component {
 	};
 
 	createNewPost = () => {
-		// TODO
+		// TODO: 
 	};
 
 	render() {
@@ -50,16 +54,14 @@ class PostsList extends Component {
 
 		return (
 			<div>
-				PostsList
-				all posts (possibly filtered to a category),with links to post details,
-				sorting, and add new capability
+				<h2>Posts</h2>				
 
 				<PostsSortSelector
 					criteria={this.state.sortCriteria}
 					setSort={this.sortPosts} />
 
 				<button
-					onClick={this.createNewPost}>new post widget</button>
+					onClick={this.createNewPost}>new post</button>
 
 				<ul>
 					{posts.map(post =>
