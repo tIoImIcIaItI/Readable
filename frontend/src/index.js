@@ -1,12 +1,25 @@
+/*eslint dot-location: ["error", "object"]*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
+import { Provider } from 'react-redux';
 //import registerServiceWorker from './registerServiceWorker';
+import configureStore from './store/configureStore';
+import { fetchCategories, fetchPosts } from './actions';
+import App from './App';
+import './index.css';
+
+const store = configureStore();
+
+store.dispatch(fetchCategories());
+store.dispatch(fetchPosts());
 
 ReactDOM.render(
-	<BrowserRouter><App /></BrowserRouter>, 
+	<Provider store={store}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</Provider>,
 	document.getElementById('root'));
 
 //registerServiceWorker();

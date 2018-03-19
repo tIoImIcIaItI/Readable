@@ -1,28 +1,27 @@
+/*eslint dot-location: ["error", "object"]*/
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import CategoriesList from './components/CategoriesList';
+import { Route } from 'react-router-dom';
+import PostsList from './components/PostsList';
+import PostDetail from './components/PostDetail';
 import './App.css';
 
 class App extends Component {
-
-  state = {
-    celectedCategory: ''
-  };
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Readable</h1>
         </header>
 
         <nav>
-list all available categories, which should link to a category view for that category
+          <Route path="/:category?" component={CategoriesList} />
         </nav>
 
         <main>
-all posts (possibly filtered to a category) with links to post details, 
-sort widget, 
-new post widget
+          <Route exact path="/:category?" component={PostsList} />
+          <Route path="/posts/:id?" component={PostDetail} />
         </main>
 
       </div>
