@@ -1,17 +1,14 @@
 /*eslint dot-location: ["error", "object"]*/
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PostsSortSelector from './PostsSortSelector';
+import PostListItem from './PostListItem';
 
 const orderBy = (arr, prop) => (arr || []).sort((x, y) => x[prop] - y[prop]);
 const orderByDescending = (arr, prop) => (arr || []).sort((x, y) => y[prop] - x[prop]);
 const sortBy = (arr, prop, ascending) => ascending ? orderBy(arr, prop) : orderByDescending(arr, prop);
 const filterBy = (arr, prop, value) => (arr || []).filter(x => !value || x[prop] === value);
-
-// TODO: Posts and comments, in all views where they are displayed, 
-// should display their current score and should have controls to increment or decrement the voteScore for the object. 
-// Posts should display the number of comments associated with the post.
 
 class PostsList extends Component {
 
@@ -47,6 +44,7 @@ class PostsList extends Component {
 		const selectedCategory =
 			this.props.match ? this.props.match.params.category : null;
 
+		// TODO: fetch posts by category or all, herein
 		const posts =
 			sortBy(
 				this.filterByCategory(this.props.posts, selectedCategory),
@@ -54,7 +52,7 @@ class PostsList extends Component {
 
 		return (
 			<div>
-				<h2>Posts</h2>				
+				<h2>Posts</h2>
 
 				<PostsSortSelector
 					criteria={this.state.sortCriteria}
@@ -66,9 +64,8 @@ class PostsList extends Component {
 				<ul>
 					{posts.map(post =>
 						<li key={post.id}>
-							<Link to={`/posts/${post.id}`}>{post.title}</Link>
-							<span>{new Date(post.timestamp).toString()}</span>
-							<p>{post.voteScore}</p>
+							<PostListItem
+								post={post} />
 						</li>
 					)}
 				</ul>

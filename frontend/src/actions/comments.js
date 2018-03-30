@@ -7,6 +7,35 @@ export const COMMENT_UPDATE = 'COMMENT_UPDATE';
 export const COMMENT_UPDATED = 'COMMENT_UPDATED';
 export const COMMENTS_DELETE = 'COMMENTS_DELETE';
 export const COMMENT_DELETED = 'COMMENT_DELETED';
+export const COMMENTS_COUNTED = 'COMMENTS_COUNTED';
+
+// TODO: remove hard-coded API URL prefix
+export const countCommentsForPost = (postId) => dispatch => (
+	fetch(`http://127.0.0.1:3001/posts/${postId}/comments`,
+		{
+			headers: { 'Authorization': 'whatever-you-want' }
+		}).
+		then(res => {
+			if (res.ok)
+				return res.json();
+
+			console.log(res);
+			throw new Error('TODO');
+		}).
+		then(json => {
+			dispatch(
+				commentsCounted(
+					postId, (json || []).length));
+		}).
+		catch(console.error)
+);
+
+export function commentsCounted(postId, commentsCount) {
+	return {
+		type: COMMENTS_COUNTED,
+		postId, commentsCount
+	};
+}
 
 export const fetchCommentsForPost = (postId) => dispatch => (
 	fetch(`http://127.0.0.1:3001/posts/${postId}/comments`,
@@ -121,3 +150,33 @@ export function commentsLoaded(comments) {
 		comments
 	};
 }
+
+const vote = (id, option, dispatch) => {
+	fetch(`http://127.0.0.1:3001/comments/${id}`,
+		{
+			headers: { 'Authorization': 'whatever-you-want' },
+			method: 'POST',
+			body: {} // TODO: option 
+		}).
+		then(res => {
+			// if (res.ok)
+			// 	return res.json();
+
+			console.log(res);
+			// throw new Error('TODO');
+		}).
+		then(_ => {
+			dispatch(
+				commentUpdated(
+					id));
+		}).
+		catch(console.error)
+};
+
+export const voteCommentUp = (id) => dispatch => {
+	vote(id, 'upVote', dispatch);
+};
+
+export const voteCommentDown = (id) => dispatch => {
+	vote(id, 'downVote', dispatch);
+};

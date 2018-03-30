@@ -62,7 +62,7 @@ export const fetchPostById = (postId) => dispatch => {
 };
 
 export const addPost = (id, timestamp, title, body, author, category) => dispatch => {
-	fetch(`http://127.0.0.1:3001/posts/${id}`,
+	fetch('http://127.0.0.1:3001/posts/',
 		{
 			headers: { 'Authorization': 'whatever-you-want' },
 			method: 'POST',
@@ -146,3 +146,33 @@ export function postDeleted(id) {
 		id
 	};
 }
+
+const vote = (id, option, dispatch) => {
+	fetch(`http://127.0.0.1:3001/posts/${id}`,
+		{
+			headers: { 'Authorization': 'whatever-you-want' },
+			method: 'POST',
+			body: {} // TODO: option 
+		}).
+		then(res => {
+			// if (res.ok)
+			// 	return res.json();
+
+			console.log(res);
+			// throw new Error('TODO');
+		}).
+		then(_ => {
+			dispatch(
+				postUpdated(
+					id));
+		}).
+		catch(console.error)
+};
+
+export const votePostUp = (id) => dispatch => {
+	vote(id, 'downVote', dispatch);
+};
+
+export const votePostDown = (id) => dispatch => {
+	vote(id, 'upVote', dispatch);
+};

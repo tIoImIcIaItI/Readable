@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchCommentsForPost, addComment, deleteComment, updateComment } from '../actions/comments';
+import CommentsCount from './CommentsCount';
 import CommentDetail from './CommentDetail';
-
-// TODO: Posts and comments, in all views where they are displayed, 
-// should display their current score and should have controls to increment or decrement the voteScore for the object. 
-// Posts should display the number of comments associated with the post.
 
 class CommentsList extends Component {
 
@@ -15,7 +12,6 @@ class CommentsList extends Component {
 	};
 
 	componentWillMount() {
-		console.log(this.props.postId);
 		this.props.fetchCommentsForPost(this.props.postId);
 	}
 
@@ -24,17 +20,20 @@ class CommentsList extends Component {
 	};
 
 	deleteComment = (id) => {
-// TODO: 
+		// TODO: 
 		this.props.deleteComment(id);
 	};
 
 	render() {
 
-		const comments = this.props.comments;
+		const { postId, comments } = this.props;
 
 		return (
 			<div>
 				<h3>Comments</h3>
+
+				<CommentsCount
+					postId={postId} />
 
 				<button
 					onClick={this.addComment}>add</button>
@@ -42,9 +41,9 @@ class CommentsList extends Component {
 				<ul>
 					{comments.map(comment => (
 						<li key={comment.id}>
-							<CommentDetail 
-								comment={comment} 
-								deleteComment={this.deleteComment}/>
+							<CommentDetail
+								comment={comment}
+								deleteComment={this.deleteComment} />
 						</li>
 					))}
 				</ul>

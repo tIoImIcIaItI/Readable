@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
 import { fetchPostById, updatePost, deletePost } from '../actions/posts';
 import CommentsList from './CommentsList';
-
-// TODO: Posts and comments, in all views where they are displayed, 
-// should display their current score and should have controls to increment or decrement the voteScore for the object. 
-// Posts should display the number of comments associated with the post.
+import VoteScore from './VoteScore';
+import { votePostUp, votePostDown } from '../actions/posts';
 
 class PostDetail extends Component {
-
-	static propTypes = {
-		//postId: PropTypes.string.isRequired
-	};
 
 	state = {
 		isEditing: false
@@ -28,7 +21,7 @@ class PostDetail extends Component {
 	deletePost = (id) => {
 		// TODO
 		this.props.deletePost(id);
-	};	
+	};
 
 	componentWillMount() {
 		const id = this.props.match ? this.props.match.params.id : -1;
@@ -52,6 +45,11 @@ class PostDetail extends Component {
 				<div>{post.voteScore}</div>
 				<div>{post.timestamp}</div>
 
+				<VoteScore
+					score={post.voteScore}
+					voteUp={this.props.voteUp}
+					voteDown={this.props.voteDown} />
+
 				<button
 					onClick={this.editPost}>edit</button>
 
@@ -73,7 +71,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-	fetchPostById, updatePost, deletePost
+	fetchPostById, updatePost, deletePost,
+	voteUp: votePostUp,
+	voteDown: votePostDown
 };
 
 export default connect(

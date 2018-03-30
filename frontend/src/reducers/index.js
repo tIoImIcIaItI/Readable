@@ -1,11 +1,12 @@
 //import { combineReducers } from 'redux';
 import { CATEGORIES_LOADED } from '../actions/categories';
 import { POSTS_LOADED, POST_LOADED } from '../actions/posts';
-import { COMMENTS_LOADED } from '../actions/comments';
+import { COMMENTS_LOADED, COMMENTS_COUNTED } from '../actions/comments';
 
 const initialState = {
 	allCategories: [],
-	allPosts: []
+	allPosts: [],
+	commentCounts: {}
 }
 
 const app = (state = initialState, action) => {
@@ -28,7 +29,16 @@ const app = (state = initialState, action) => {
 		case COMMENTS_LOADED:
 			return {
 				...state,
-				comments: action.comments
+				comments: action.comments,
+				commentsCount: (action.comments || []).length
+			};
+		case COMMENTS_COUNTED:
+			return  {
+				...state,
+				commentCounts: {
+					...state.commentCounts,
+					[action.postId]: action.commentsCount
+				}
 			};
 		default:
 			return state;
