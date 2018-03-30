@@ -21,7 +21,7 @@ class App extends Component {
 
         <main>
           <Route exact path="/:category?" component={PostsList} />
-          <Route path="/posts/:id?" component={PostDetail} />
+          <Route exact path="/:category/:id" component={PostDetail} />
         </main>
 
       </div>
