@@ -4,6 +4,7 @@ import { fetchPostById, updatePost, deletePost } from '../actions/posts';
 import CommentsList from './CommentsList';
 import VoteScore from './VoteScore';
 import { votePostUp, votePostDown } from '../actions/posts';
+import PostEditForm from './PostEditForm';
 
 class PostDetail extends Component {
 
@@ -15,6 +16,12 @@ class PostDetail extends Component {
 		// TODO
 		this.setState({
 			isEditing: true
+		});
+	};
+
+	cancelEditPost = () => {
+		this.setState({
+			isEditing: false
 		});
 	};
 
@@ -31,11 +38,20 @@ class PostDetail extends Component {
 	render() {
 		const id = this.props.match ? this.props.match.params.id : -1;
 		const post = this.props.post;
+
 		return (
 			<div>
 				<h2>Post</h2>
 
 				{this.state.isEditing ? 'editing' : 'not editing'}
+
+				<br/>
+				{this.state.isEditing && 
+					<PostEditForm 
+						post={post}
+						savePost={this.savePost}
+						cancelEditPost={this.cancelEditPost}/>}
+				<br/>
 
 				<div>{post.id}</div>
 				<div>{post.title}</div>
