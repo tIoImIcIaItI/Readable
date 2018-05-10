@@ -90,32 +90,36 @@ export function postAdded(id) {
 	};
 }
 
-export const updatePost = (id, title, body) => dispatch => {
-	fetch(`http://127.0.0.1:3001/posts/${id}`,
+export const updatePost = (post) => dispatch => {
+	fetch(`http://127.0.0.1:3001/posts/${post.id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'PUT',
-			body: {} // TODO: 
+			body: JSON.stringify(post)
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
-
 			console.log(res);
+			 if (res.ok)
+			 {
+				 // fetchPostById(id);
+				 const post = res.json();
+				 console.log(post);
+				 return post;
+			 }
 			// throw new Error('TODO');
 		}).
-		then(_ => {
+		then(post => {
 			dispatch(
 				postUpdated(
-					id));
+					post));
 		}).
 		catch(console.error)
 }
 
-export function postUpdated(id) {
+export function postUpdated(post) {
 	return {
 		type: POST_UPDATED,
-		id
+		post
 	};
 }
 

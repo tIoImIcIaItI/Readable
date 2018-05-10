@@ -1,50 +1,82 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-// import { fetchPostById, updatePost, deletePost } from '../actions/posts';
-// import CommentsList from './CommentsList';
-// import VoteScore from './VoteScore';
-// import { votePostUp, votePostDown } from '../actions/posts';
+import { PropTypes } from 'prop-types';
+
+const getTimestamp = (dt = new Date()) => dt.getTime();
 
 class PostEditForm extends Component {
+
+	static propTypes = {
+		//allCategories: PropTypes.array.isRequired,
+		post: PropTypes.object.isRequired,
+		savePost: PropTypes.func.isRequired,
+		cancelEditPost: PropTypes.func.isRequired,
+	};
 
 	state = {
 		isEditing: false
 	};
 
+	onChange = (event) => {
+		// https://reactjs.org/docs/forms.html
+		const target = event.target || {};
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+
+		this.setState({
+			[target.name]: value
+		});
+	};
+
+	onSubmit = (event) => {
+
+		const { post, savePost } = this.props;
+		const { /*category,*/ title, body } = this.state;
+
+		savePost({
+			...post,
+			//category: category || post.category,
+			title: title || post.title,
+			body: body || post.body,
+			timestamp: getTimestamp()
+		});
+
+		event.preventDefault();
+	};
+
 	render() {
-		// const id = this.props.match ? this.props.match.params.id : -1;
-		const {post, savePost, cancelEditPost} = this.props;
+		const { /*allCategories,*/ post } = this.props;
+		const { cancelEditPost } = this.props;
 
 		return (
-			<div>
-				
-                <div>
-                    <input type='text' value={post.title} />
-                    
-                    <input type='text' value={post.body} />
-                </div>
+			<form onSubmit={this.onSubmit}>
 
-				<button
-					onClick={savePost}>save</button>
+				{/* <div>
+					<label htmlFor='category'>Category</label>
+					<select id='category' name='category' defaultValue={post.category} onChange={this.onChange}>
+						{allCategories.map(category =>
+							<option key={category.path} value={category.path} >
+								{category.name}
+							</option>
+						)}
+					</select>
+				</div> */}
 
-				<button
-					onClick={cancelEditPost}>cancel</button>
+				<div>
+					<label htmlFor='title'>Title</label>
+					<input id='title' type='text' name='title' defaultValue={post.title} onChange={this.onChange} />
+				</div>
 
-			</div>
+				<div>
+					<label htmlFor='body'>Content</label>
+					<textarea id='body' name='body' defaultValue={post.body} onChange={this.onChange} />
+				</div>
+
+				<button onClick={cancelEditPost}>cancel</button>
+
+				<button type='submit'>save</button>
+
+			</form>
 		);
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		// post: (state.post || {})
-	}
-};
-
-const mapDispatchToProps = {
-	// cancelEditPost, savePost
-};
-
-export default connect(
-	mapStateToProps, mapDispatchToProps
-)(PostEditForm);
+export default PostEditForm;

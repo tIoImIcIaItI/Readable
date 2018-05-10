@@ -9,24 +9,34 @@ import PostEditForm from './PostEditForm';
 class PostDetail extends Component {
 
 	state = {
-		isEditing: false
+		isEditingPost: false
 	};
 
 	editPost = () => {
-		// TODO
 		this.setState({
-			isEditing: true
+			isEditingPost: true
+		});
+	};
+
+	savePost = (post) => {
+		console.log(post);
+
+		this.props.updatePost(post);
+
+		// TODO: save to db
+		this.setState({
+			isEditingPost: false
 		});
 	};
 
 	cancelEditPost = () => {
 		this.setState({
-			isEditing: false
+			isEditingPost: false
 		});
 	};
 
 	deletePost = (id) => {
-		// TODO
+		// TODO: delete from db
 		this.props.deletePost(id);
 	};
 
@@ -37,52 +47,52 @@ class PostDetail extends Component {
 
 	render() {
 		const id = this.props.match ? this.props.match.params.id : -1;
-		const post = this.props.post;
+		const { /*allCategories,*/ post } = this.props;
+		const timestamp = post.timestamp ? new Date(post.timestamp).toString() : '';
 
 		return (
-			<div>
-				<h2>Post</h2>
-
-				{this.state.isEditing ? 'editing' : 'not editing'}
-
-				<br/>
-				{this.state.isEditing && 
-					<PostEditForm 
+			this.state.isEditingPost ?
+				(
+					<PostEditForm
+						/*allCategories={allCategories}*/
 						post={post}
 						savePost={this.savePost}
-						cancelEditPost={this.cancelEditPost}/>}
-				<br/>
+						cancelEditPost={this.cancelEditPost} />
+				) : (
+					<div>
+						<h2>{post.title}</h2>
 
-				<div>{post.id}</div>
-				<div>{post.title}</div>
-				<div>{post.body}</div>
-				<div>{post.author}</div>
-				<div>{post.category}</div>
-				<div>{post.voteScore}</div>
-				<div>{post.timestamp}</div>
+						<div>{post.id}</div>
+						<div>{post.title}</div>
+						<div>{post.body}</div>
+						<div>{post.author}</div>
+						<div>{post.category}</div>
+						<div>{post.voteScore}</div>
+						<div>{timestamp}</div>
 
-				<VoteScore
-					score={post.voteScore}
-					voteUp={this.props.voteUp}
-					voteDown={this.props.voteDown} />
+						<VoteScore
+							score={post.voteScore}
+							voteUp={this.props.voteUp}
+							voteDown={this.props.voteDown} />
 
-				<button
-					onClick={this.editPost}>edit</button>
+						<button
+							onClick={this.editPost}>edit</button>
 
-				<button
-					onClick={this.deletePost}>delete</button>
+						<button
+							onClick={this.deletePost}>delete</button>
 
-				<CommentsList
-					postId={id} />
-
-			</div>
+						<CommentsList
+							postId={id} />
+					</div>
+				)
 		);
 	}
 }
 
 const mapStateToProps = state => {
 	return {
-		post: (state.post || {})
+		post: (state.post || {})//,
+		//allCategories: (state.allCategories || [])
 	}
 };
 
