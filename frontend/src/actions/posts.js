@@ -6,6 +6,7 @@ export const POSTS_DELETE = 'POSTS_DELETE';
 export const POST_DELETED = 'POST_DELETED';
 export const POST_UPDATE = 'POST_UPDATE';
 export const POST_UPDATED = 'POST_UPDATED';
+export const POST_VOTES_UPDATED = 'POST_VOTES_UPDATED';
 export const POST_LOADED = 'POST_LOADED';
 
 export const fetchPosts = () => dispatch => (
@@ -98,15 +99,10 @@ export const updatePost = (post) => dispatch => {
 			body: JSON.stringify(post)
 		}).
 		then(res => {
-			console.log(res);
 			 if (res.ok)
-			 {
-				 // fetchPostById(id);
-				 const post = res.json();
-				 console.log(post);
-				 return post;
-			 }
-			// throw new Error('TODO');
+				  return res.json();
+				  
+			 // throw new Error('TODO');
 		}).
 		then(post => {
 			dispatch(
@@ -154,29 +150,39 @@ export function postDeleted(id) {
 const vote = (id, option, dispatch) => {
 	fetch(`http://127.0.0.1:3001/posts/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'POST',
-			body: {} // TODO: option 
+			body: JSON.stringify({
+				option
+			})
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
+			if (res.ok)
+				return res.json();
 
 			console.log(res);
 			// throw new Error('TODO');
 		}).
-		then(_ => {
+		then(post => {
 			dispatch(
-				postUpdated(
-					id));
+				postVotesUpdated(
+					post));
 		}).
 		catch(console.error)
 };
 
+export function postVotesUpdated(post) {
+	return {
+		type: POST_VOTES_UPDATED,
+		id: post.id,
+		voteScore: post.voteScore
+	};
+}
+
 export const votePostUp = (id) => dispatch => {
-	vote(id, 'downVote', dispatch);
+	vote(id, 'upVote', dispatch);
 };
 
 export const votePostDown = (id) => dispatch => {
-	vote(id, 'upVote', dispatch);
+	vote(id, 'downVote', dispatch);
 };

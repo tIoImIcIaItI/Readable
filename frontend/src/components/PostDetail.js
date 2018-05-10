@@ -72,8 +72,8 @@ class PostDetail extends Component {
 
 						<VoteScore
 							score={post.voteScore}
-							voteUp={this.props.voteUp}
-							voteDown={this.props.voteDown} />
+							voteUp={() => this.props.voteUp(post.id)}
+							voteDown={() => this.props.voteDown(post.id)} />
 
 						<button
 							onClick={this.editPost}>edit</button>

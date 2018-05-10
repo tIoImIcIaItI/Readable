@@ -40,8 +40,8 @@ class CommentDetail extends Component {
 
 				<VoteScore
 					score={comment.voteScore}
-					voteUp={this.props.voteUp}
-					voteDown={this.props.voteDown} />
+					voteUp={() => this.props.voteUp(comment.id)}
+					voteDown={() => this.props.voteDown(comment.id)} />
 				<button
 					onClick={this.editComment}>edit</button>
 

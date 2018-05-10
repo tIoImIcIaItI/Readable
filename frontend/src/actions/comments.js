@@ -5,6 +5,7 @@ export const COMMENTS_LOAD = 'COMMENTS_LOAD';
 export const COMMENTS_LOADED = 'COMMENTS_LOADED';
 export const COMMENT_UPDATE = 'COMMENT_UPDATE';
 export const COMMENT_UPDATED = 'COMMENT_UPDATED';
+export const COMMENT_VOTES_UPDATED = 'COMMENT_VOTES_UPDATED';
 export const COMMENTS_DELETE = 'COMMENTS_DELETE';
 export const COMMENT_DELETED = 'COMMENT_DELETED';
 export const COMMENTS_COUNTED = 'COMMENTS_COUNTED';
@@ -90,29 +91,32 @@ export function commentAdded(id) {
 export const updateComment = (id, timestamp, body) => dispatch => {
 	fetch(`http://127.0.0.1:3001/comments/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'PUT',
-			body: {} // TODO: 
+			body: JSON.stringify({
+				timestamp, 
+				body
+			})
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
+			if (res.ok)
+				return res.json();
 
 			console.log(res);
 			// throw new Error('TODO');
 		}).
-		then(_ => {
+		then(comment => {
 			dispatch(
 				commentUpdated(
-					id));
+					comment));
 		}).
 		catch(console.error)
 }
 
-export function commentUpdated(id) {
+export function commentUpdated(comment) {
 	return {
 		type: COMMENT_UPDATED,
-		id
+		comment
 	};
 }
 
@@ -154,24 +158,36 @@ export function commentsLoaded(comments) {
 const vote = (id, option, dispatch) => {
 	fetch(`http://127.0.0.1:3001/comments/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'POST',
-			body: {} // TODO: option 
+			body: JSON.stringify({
+				option
+			})
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
-
-			console.log(res);
+			if (res.ok)
+			{
+				const comment = res.json();
+				console.log(comment);
+				return comment;
+			}			
 			// throw new Error('TODO');
 		}).
-		then(_ => {
+		then(comment => {
 			dispatch(
-				commentUpdated(
+				commentVotesUpdated(
 					id));
 		}).
 		catch(console.error)
 };
+
+export function commentVotesUpdated(comment) {
+	return {
+		type: COMMENT_VOTES_UPDATED,
+		id: comment.id,
+		voteScore: comment.voteScore
+	};
+}
 
 export const voteCommentUp = (id) => dispatch => {
 	vote(id, 'upVote', dispatch);
