@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { votePostUp, votePostDown, deletePost } from '../actions/posts';
+import { votePostUp, votePostDown, updatePost, deletePost } from '../actions/posts';
 import VoteScore from './VoteScore';
 import CommentsCount from './CommentsCount';
+import PostEditForm from './PostEditForm';
 
 class PostListItem extends Component {
 
@@ -12,12 +13,47 @@ class PostListItem extends Component {
 		post: PropTypes.object.isRequired
 	};
 
+	state = {
+		isEditingPost: false
+	};
+
+	editPost = () => {
+		this.setState({
+			isEditingPost: true
+		});
+	};
+
+	savePost = (post) => {
+		this.props.updatePost(post);
+
+		this.setState({
+			isEditingPost: false
+		});
+	};
+	
+	cancelEditPost = () => {
+		this.setState({
+			isEditingPost: false
+		});
+	};
+
 	render() {
+
+		const { isEditingPost } = this.state;
 		const { post, voteUp, voteDown, deletePost } = this.props;
 
-		return (
+		return isEditingPost ? (
+			<div>
+				<PostEditForm
+					/*allCategories={allCategories}*/
+					post={post}
+					savePost={this.savePost}
+					cancelEditPost={this.cancelEditPost} />
+			</div>
+			) : (
 			<div>
 				<Link to={`/${post.category}/${post.id}`}>{post.title}</Link>
+
 				<div>{post.author}</div>
 				<div>{new Date(post.timestamp).toString()}</div>
 
@@ -26,17 +62,17 @@ class PostListItem extends Component {
 
 				<VoteScore
 					score={post.voteScore}
-					voteUp={voteUp}
-					voteDown={voteDown} />
+					voteUp={() => voteUp(post.id)}
+					voteDown={() => voteDown(post.id)} />
 
-				<button>
-					TODO: edit post
+				<button onClick={this.editPost}>
+					edit post
 				</button>
 
 				<button
-					onClick={deletePost}>
-					delete post
+					onClick={() => deletePost(post.id)}>delete post
 				</button>
+				
 			</div>
 		);
 	}
@@ -45,7 +81,7 @@ class PostListItem extends Component {
 const mapDispatchToProps = {
 	voteUp: votePostUp,
 	voteDown: votePostDown,
-	deletePost
+	updatePost, deletePost
 };
 
 export default connect(

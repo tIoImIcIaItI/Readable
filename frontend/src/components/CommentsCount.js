@@ -10,12 +10,15 @@ class CommentsCount extends Component {
 	};
 
 	componentWillMount() {
-		this.props.countCommentsForPost(this.props.postId);
+		const { countCommentsForPost, postId } = this.props;
+
+		countCommentsForPost(
+			postId);
 	}
 
 	render() {
-		const count = 
-		this.props.commentCounts[this.props.postId] || 0;
+		const count =
+			this.props.commentCounts[this.props.postId] || 0;
 
 		return (
 			<div>

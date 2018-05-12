@@ -1,4 +1,6 @@
 /*eslint dot-location: ["error", "object"]*/
+import { api, headers } from '../config';
+
 export const POSTS_LOADED = 'POSTS_LOADED';
 export const POSTS_ADD = 'POSTS_ADD';
 export const POST_ADDED = 'POST_ADDED';
@@ -10,9 +12,9 @@ export const POST_VOTES_UPDATED = 'POST_VOTES_UPDATED';
 export const POST_LOADED = 'POST_LOADED';
 
 export const fetchPosts = () => dispatch => (
-	fetch('http://127.0.0.1:3001/posts',
+	fetch(`http://${api}/posts`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' }
+			headers: headers
 		}).
 		then(res => {
 			if (res.ok)
@@ -43,9 +45,9 @@ export function postLoaded(post) {
 }
 
 export const fetchPostById = (postId) => dispatch => {
-	fetch(`http://127.0.0.1:3001/posts/${postId}`,
+	fetch(`http://${api}/posts/${postId}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' }
+			headers: headers
 		}).
 		then(res => {
 			if (res.ok)
@@ -63,9 +65,9 @@ export const fetchPostById = (postId) => dispatch => {
 };
 
 export const addPost = (id, timestamp, title, body, author, category) => dispatch => {
-	fetch('http://127.0.0.1:3001/posts/',
+	fetch(`http://${api}/posts/`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: headers,
 			method: 'POST',
 			body: {} // TODO: 
 		}).
@@ -92,7 +94,7 @@ export function postAdded(id) {
 }
 
 export const updatePost = (post) => dispatch => {
-	fetch(`http://127.0.0.1:3001/posts/${post.id}`,
+	fetch(`http://${api}/posts/${post.id}`,
 		{
 			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'PUT',
@@ -120,19 +122,18 @@ export function postUpdated(post) {
 }
 
 export const deletePost = (id) => dispatch => {
-	fetch(`http://127.0.0.1:3001/posts/${id}`,
+	fetch(`http://${api}/posts/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: headers,
 			method: 'DELETE'
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
+			if (res.ok)
+				return res.json();
 
-			console.log(res);
-			// throw new Error('TODO');
+			throw new Error('TODO');
 		}).
-		then(_ => {
+		then(_ => { // TODO: should we dispatch deletions for all child comments, so the post & comment reducers don't mix ???
 			dispatch(
 				postDeleted(
 					id));
@@ -148,7 +149,7 @@ export function postDeleted(id) {
 }
 
 const vote = (id, option, dispatch) => {
-	fetch(`http://127.0.0.1:3001/posts/${id}`,
+	fetch(`http://${api}/posts/${id}`,
 		{
 			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'POST',

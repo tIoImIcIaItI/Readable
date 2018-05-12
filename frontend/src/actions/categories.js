@@ -1,10 +1,12 @@
 /*eslint dot-location: ["error", "object"]*/
+import { api, headers } from '../config';
+
 export const CATEGORIES_LOADED = 'CATEGORIES_LOADED';
 
 export const fetchCategories = () => dispatch => (
-	fetch('http://127.0.0.1:3001/categories',
+	fetch(`http://${api}/categories`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' }
+			headers: headers
 		}).
 		then(res => {
 			if (res.ok)

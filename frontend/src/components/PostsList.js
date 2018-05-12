@@ -1,6 +1,5 @@
 /*eslint dot-location: ["error", "object"]*/
 import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PostsSortSelector from './PostsSortSelector';
 import PostListItem from './PostListItem';
@@ -40,6 +39,10 @@ class PostsList extends Component {
 		// TODO: 
 	};
 
+	deletePost = (id) => {
+		this.props.deletePost(id);
+	};
+
 	render() {
 		const selectedCategory =
 			this.props.match ? this.props.match.params.category : null;
@@ -65,7 +68,7 @@ class PostsList extends Component {
 					{posts.map(post =>
 						<li key={post.id}>
 							<PostListItem
-								post={post} />
+								post={post}/>
 						</li>
 					)}
 				</ul>

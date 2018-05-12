@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import VoteScore from './VoteScore';
-import { voteCommentUp, voteCommentDown } from '../actions/comments';
+import CommentEditForm from './CommentEditForm';
+import { updateComment, deleteComment, voteCommentUp, voteCommentDown } from '../actions/comments';
 
 class CommentDetail extends Component {
 
 	static propTypes = {
-		comment: PropTypes.object.isRequired,
-		deleteComment: PropTypes.func.isRequired
+		comment: PropTypes.object.isRequired
 	};
 
 	state = {
@@ -21,32 +21,63 @@ class CommentDetail extends Component {
 		});
 	};
 
+	saveComment = (comment) => {
+		
+		this.props.updateComment(
+			comment.id, comment.timestamp, comment.body);
+
+		this.setState({
+			isEditing: false
+		});
+	};
+
+	cancelEditComment = () => {
+		this.setState({
+			isEditing: false
+		});
+	};
+
 	render() {
 
-		const comment = this.props.comment;
+		const { isEditing } = this.state;
+		const { comment, voteUp, voteDown, deleteComment } = this.props;
 
 		return (
 			<div>
 				<h4>Comment</h4>
 
-				{this.state.isEditing ? 'editing' : 'not editing'}
-
 				<div>{comment.id}</div>
 				<div>{comment.parentId}</div>
-				<div>{comment.timestamp}</div>
-				<div>{comment.body}</div>
-				<div>{comment.author}</div>
 
+				<div>{comment.timestamp}</div>
+
+				{isEditing ? (
+					<CommentEditForm
+						comment={comment}
+						saveComment={this.saveComment}
+						cancelEditComment={this.cancelEditComment} />
+				) : (
+						<div>
+							<div>{comment.body}</div>
+						</div>
+					)}
+
+				<div>{comment.author}</div>
 
 				<VoteScore
 					score={comment.voteScore}
-					voteUp={() => this.props.voteUp(comment.id)}
-					voteDown={() => this.props.voteDown(comment.id)} />
-				<button
-					onClick={this.editComment}>edit</button>
+					voteUp={() => voteUp(comment.id)}
+					voteDown={() => voteDown(comment.id)} />
 
-				<button
-					onClick={this.props.deleteComment}>delete</button>
+				{!isEditing && (
+				<div>
+					<button
+						onClick={this.editComment}>edit</button>
+
+					<button
+						onClick={() => deleteComment(comment.id)}>delete</button>
+				</div>
+				)}
 
 			</div>
 		);
@@ -54,6 +85,7 @@ class CommentDetail extends Component {
 }
 
 const mapDispatchToProps = {
+	updateComment, deleteComment,
 	voteUp: voteCommentUp,
 	voteDown: voteCommentDown
 };

@@ -1,4 +1,6 @@
 /*eslint dot-location: ["error", "object"]*/
+import { api, headers } from '../config';
+
 export const COMMENTS_ADD = 'COMMENTS_ADD';
 export const COMMENT_ADDED = 'COMMENT_ADDED';
 export const COMMENTS_LOAD = 'COMMENTS_LOAD';
@@ -10,17 +12,15 @@ export const COMMENTS_DELETE = 'COMMENTS_DELETE';
 export const COMMENT_DELETED = 'COMMENT_DELETED';
 export const COMMENTS_COUNTED = 'COMMENTS_COUNTED';
 
-// TODO: remove hard-coded API URL prefix
 export const countCommentsForPost = (postId) => dispatch => (
-	fetch(`http://127.0.0.1:3001/posts/${postId}/comments`,
+	fetch(`http://${api}/posts/${postId}/comments`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' }
+			headers: headers
 		}).
 		then(res => {
 			if (res.ok)
 				return res.json();
 
-			console.log(res);
 			throw new Error('TODO');
 		}).
 		then(json => {
@@ -39,15 +39,14 @@ export function commentsCounted(postId, commentsCount) {
 }
 
 export const fetchCommentsForPost = (postId) => dispatch => (
-	fetch(`http://127.0.0.1:3001/posts/${postId}/comments`,
+	fetch(`http://${api}/posts/${postId}/comments`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' }
+			headers: headers
 		}).
 		then(res => {
 			if (res.ok)
 				return res.json();
 
-			console.log(res);
 			throw new Error('TODO');
 		}).
 		then(json => {
@@ -59,10 +58,17 @@ export const fetchCommentsForPost = (postId) => dispatch => (
 		catch(console.error)
 );
 
+export function commentsLoaded(comments) {
+	return {
+		type: COMMENTS_LOADED,
+		comments
+	};
+}
+
 export const addComment = (id, timestamp, body, author, parentId) => dispatch => {
-	fetch(`http://127.0.0.1:3001/comments`,
+	fetch(`http://${api}/comments`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: headers,
 			method: 'POST',
 			body: {} // TODO: 
 		}).
@@ -70,7 +76,7 @@ export const addComment = (id, timestamp, body, author, parentId) => dispatch =>
 			// if (res.ok)
 			// 	return res.json();
 
-			console.log(res);
+			console.log(res.json());
 			// throw new Error('TODO');
 		}).
 		then(_ => {
@@ -89,7 +95,7 @@ export function commentAdded(id) {
 }
 
 export const updateComment = (id, timestamp, body) => dispatch => {
-	fetch(`http://127.0.0.1:3001/comments/${id}`,
+	fetch(`http://${api}/comments/${id}`,
 		{
 			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'PUT',
@@ -102,8 +108,7 @@ export const updateComment = (id, timestamp, body) => dispatch => {
 			if (res.ok)
 				return res.json();
 
-			console.log(res);
-			// throw new Error('TODO');
+			throw new Error('TODO');
 		}).
 		then(comment => {
 			dispatch(
@@ -121,42 +126,35 @@ export function commentUpdated(comment) {
 }
 
 export const deleteComment = (id) => dispatch => {
-	fetch(`http://127.0.0.1:3001/comments/${id}`,
+	fetch(`http://${api}/comments/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want' },
+			headers: headers,
 			method: 'DELETE'
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
+			if (res.ok)
+				return res.json();
 
-			console.log(res);
-			// throw new Error('TODO');
+			throw new Error('TODO');
 		}).
-		then(_ => {
+		then(comment => {
 			dispatch(
 				commentDeleted(
-					id));
+					comment));
 		}).
 		catch(console.error)
 }
 
-export function commentDeleted(id) {
+export function commentDeleted({id, parentId}) {
 	return {
 		type: COMMENT_DELETED,
-		id
-	};
-}
-
-export function commentsLoaded(comments) {
-	return {
-		type: COMMENTS_LOADED,
-		comments
+		id,
+		parentId
 	};
 }
 
 const vote = (id, option, dispatch) => {
-	fetch(`http://127.0.0.1:3001/comments/${id}`,
+	fetch(`http://${api}/comments/${id}`,
 		{
 			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
 			method: 'POST',
@@ -166,17 +164,14 @@ const vote = (id, option, dispatch) => {
 		}).
 		then(res => {
 			if (res.ok)
-			{
-				const comment = res.json();
-				console.log(comment);
-				return comment;
-			}			
-			// throw new Error('TODO');
+				return res.json();
+
+			throw new Error('TODO');
 		}).
 		then(comment => {
 			dispatch(
 				commentVotesUpdated(
-					id));
+					comment));
 		}).
 		catch(console.error)
 };

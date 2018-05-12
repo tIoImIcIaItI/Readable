@@ -12,16 +12,14 @@ class CommentsList extends Component {
 	};
 
 	componentWillMount() {
-		this.props.fetchCommentsForPost(this.props.postId);
+		const { fetchCommentsForPost, postId } = this.props;
+
+		fetchCommentsForPost(
+			postId);
 	}
 
 	addComment = () => {
 		// TODO: 
-	};
-
-	deleteComment = (id) => {
-		// TODO: 
-		this.props.deleteComment(id);
 	};
 
 	render() {
@@ -42,8 +40,7 @@ class CommentsList extends Component {
 					{comments.map(comment => (
 						<li key={comment.id}>
 							<CommentDetail
-								comment={comment}
-								deleteComment={this.deleteComment} />
+								comment={comment} />
 						</li>
 					))}
 				</ul>
@@ -60,7 +57,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-	fetchCommentsForPost, addComment, updateComment, deleteComment
+	fetchCommentsForPost, 
+	addComment, updateComment, deleteComment
 };
 
 export default connect(

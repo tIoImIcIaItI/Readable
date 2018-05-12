@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchPostById, updatePost, deletePost } from '../actions/posts';
 import CommentsList from './CommentsList';
@@ -9,35 +10,37 @@ import PostEditForm from './PostEditForm';
 class PostDetail extends Component {
 
 	state = {
-		isEditingPost: false
+		isEditing: false,
+		redirect: false
 	};
 
 	editPost = () => {
 		this.setState({
-			isEditingPost: true
+			isEditing: true
 		});
 	};
 
 	savePost = (post) => {
-		console.log(post);
-
 		this.props.updatePost(post);
 
-		// TODO: save to db
 		this.setState({
-			isEditingPost: false
+			isEditing: false
 		});
 	};
 
 	cancelEditPost = () => {
 		this.setState({
-			isEditingPost: false
+			isEditing: false
 		});
 	};
 
 	deletePost = (id) => {
-		// TODO: delete from db
 		this.props.deletePost(id);
+
+		this.setState({
+			isEditing: false,
+			redirect: '/'
+		});
 	};
 
 	componentWillMount() {
@@ -46,45 +49,60 @@ class PostDetail extends Component {
 	}
 
 	render() {
+
+		if (this.state.redirect)
+			return <Redirect to={this.state.redirect} />
+
+		const { isEditing } = this.state;
+		const { /*allCategories,*/ post, voteUp, voteDown } = this.props;
+
 		const id = this.props.match ? this.props.match.params.id : -1;
-		const { /*allCategories,*/ post } = this.props;
 		const timestamp = post.timestamp ? new Date(post.timestamp).toString() : '';
 
 		return (
-			this.state.isEditingPost ?
-				(
+			<div>
+				<h2>{post.title}</h2>
+
+				<div>{post.id}</div>
+
+				{isEditing ? (
 					<PostEditForm
 						/*allCategories={allCategories}*/
 						post={post}
 						savePost={this.savePost}
 						cancelEditPost={this.cancelEditPost} />
 				) : (
+						<div>
+							<div>{post.title}</div>
+							<div>{post.body}</div>
+						</div>
+					)}
+
+				<div>{post.author}</div>
+				<div>{post.category}</div>
+				<div>{post.voteScore}</div>
+				<div>{timestamp}</div>
+
+				<VoteScore
+					score={post.voteScore}
+					voteUp={() => voteUp(post.id)}
+					voteDown={() => voteDown(post.id)} />
+
+				{!isEditing && (
 					<div>
-						<h2>{post.title}</h2>
-
-						<div>{post.id}</div>
-						<div>{post.title}</div>
-						<div>{post.body}</div>
-						<div>{post.author}</div>
-						<div>{post.category}</div>
-						<div>{post.voteScore}</div>
-						<div>{timestamp}</div>
-
-						<VoteScore
-							score={post.voteScore}
-							voteUp={() => this.props.voteUp(post.id)}
-							voteDown={() => this.props.voteDown(post.id)} />
+						<button
+							onClick={this.editPost}>edit
+					</button>
 
 						<button
-							onClick={this.editPost}>edit</button>
-
-						<button
-							onClick={this.deletePost}>delete</button>
-
-						<CommentsList
-							postId={id} />
+							onClick={() => this.deletePost(post.id)}>delete
+					</button>
 					</div>
-				)
+				)}
+
+				< CommentsList
+					postId={id} />
+			</div>
 		);
 	}
 }
