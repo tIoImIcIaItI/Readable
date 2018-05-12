@@ -1,5 +1,5 @@
 /*eslint dot-location: ["error", "object"]*/
-import { api, headers } from '../config';
+import { api, headers, jsonHeaders } from '../config';
 
 export const COMMENTS_ADD = 'COMMENTS_ADD';
 export const COMMENT_ADDED = 'COMMENT_ADDED';
@@ -50,7 +50,6 @@ export const fetchCommentsForPost = (postId) => dispatch => (
 			throw new Error('TODO');
 		}).
 		then(json => {
-			console.log(json);
 			dispatch(
 				commentsLoaded(
 					json));
@@ -65,44 +64,40 @@ export function commentsLoaded(comments) {
 	};
 }
 
-export const addComment = (id, timestamp, body, author, parentId) => dispatch => {
+export const addComment = ({ id, timestamp, body, author, parentId }) => dispatch => {
 	fetch(`http://${api}/comments`,
 		{
-			headers: headers,
+			headers: jsonHeaders,
 			method: 'POST',
-			body: {} // TODO: 
+			body: JSON.stringify({ id, timestamp, body, author, parentId })
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
+			if (res.ok)
+				return res.json();
 
-			console.log(res.json());
-			// throw new Error('TODO');
+			throw new Error('TODO');
 		}).
-		then(_ => {
+		then(comment => {
 			dispatch(
 				commentAdded(
-					id));
+					comment));
 		}).
 		catch(console.error)
 }
 
-export function commentAdded(id) {
+export function commentAdded(comment) {
 	return {
 		type: COMMENT_ADDED,
-		id
+		comment
 	};
 }
 
-export const updateComment = (id, timestamp, body) => dispatch => {
+export const updateComment = ({id, timestamp, body}) => dispatch => {
 	fetch(`http://${api}/comments/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
+			headers: jsonHeaders,
 			method: 'PUT',
-			body: JSON.stringify({
-				timestamp, 
-				body
-			})
+			body: JSON.stringify({ timestamp, body })
 		}).
 		then(res => {
 			if (res.ok)
@@ -145,7 +140,7 @@ export const deleteComment = (id) => dispatch => {
 		catch(console.error)
 }
 
-export function commentDeleted({id, parentId}) {
+export function commentDeleted({ id, parentId }) {
 	return {
 		type: COMMENT_DELETED,
 		id,
@@ -156,7 +151,7 @@ export function commentDeleted({id, parentId}) {
 const vote = (id, option, dispatch) => {
 	fetch(`http://${api}/comments/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
+			headers: jsonHeaders,
 			method: 'POST',
 			body: JSON.stringify({
 				option

@@ -6,7 +6,9 @@ const getTimestamp = (dt = new Date()) => dt.getTime();
 class PostEditForm extends Component {
 
 	static propTypes = {
-		//allCategories: PropTypes.array.isRequired,
+		isNew: PropTypes.bool,
+		allCategories: PropTypes.array,
+
 		post: PropTypes.object.isRequired,
 		savePost: PropTypes.func.isRequired,
 		cancelEditPost: PropTypes.func.isRequired,
@@ -29,11 +31,12 @@ class PostEditForm extends Component {
 	onSubmit = (event) => {
 
 		const { post, savePost } = this.props;
-		const { /*category,*/ title, body } = this.state;
+		const { category, author, title, body } = this.state;
 
 		savePost({
 			...post,
-			//category: category || post.category,
+			category: category || post.category,
+			author: author || post.author,
 			title: title || post.title,
 			body: body || post.body,
 			timestamp: getTimestamp()
@@ -43,13 +46,16 @@ class PostEditForm extends Component {
 	};
 
 	render() {
-		const { /*allCategories,*/ post } = this.props;
+		const { isNew, allCategories, post } = this.props;
 		const { cancelEditPost } = this.props;
 
 		return (
 			<form onSubmit={this.onSubmit}>
 
-				{/* <div>
+				{isNew && (
+				<div>
+
+				<div>
 					<label htmlFor='category'>Category</label>
 					<select id='category' name='category' defaultValue={post.category} onChange={this.onChange}>
 						{allCategories.map(category =>
@@ -58,7 +64,15 @@ class PostEditForm extends Component {
 							</option>
 						)}
 					</select>
-				</div> */}
+				</div>
+
+				<div>
+					<label htmlFor='author'>author</label>
+					<input id='author' type='text' name='author' defaultValue={post.author} onChange={this.onChange} />
+				</div>
+
+				</div>
+				)}
 
 				<div>
 					<label htmlFor='title'>Title</label>

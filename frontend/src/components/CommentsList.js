@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import uuidv1 from 'uuid/v1';
 import { fetchCommentsForPost, addComment, deleteComment, updateComment } from '../actions/comments';
 import CommentsCount from './CommentsCount';
 import CommentDetail from './CommentDetail';
+import CommentEditForm from './CommentEditForm';
 
 class CommentsList extends Component {
 
 	static propTypes = {
 		postId: PropTypes.string.isRequired
+	};
+
+	state = {
+		isCreatingPost: false
 	};
 
 	componentWillMount() {
@@ -18,12 +24,41 @@ class CommentsList extends Component {
 			postId);
 	}
 
-	addComment = () => {
-		// TODO: 
+	newEntity = (postId) => ({
+		id: uuidv1(),
+		parentId: postId,
+		author: '',
+		body: ''
+	});
+
+	createNewEntity = () => {
+		this.setState({
+			isCreatingEntity: true
+		});
+	};
+
+	saveNewEntity = (post) => {
+
+		this.props.addComment(post);
+
+		this.setState({
+			isCreatingEntity: false
+		});
+	};
+	
+	cancelNewEntity = () => {
+		this.setState({
+			isCreatingEntity: false
+		});
+	};
+
+	deleteEntity = (id) => {
+		this.props.deleteComment(id);
 	};
 
 	render() {
 
+		const { isCreatingEntity } = this.state;
 		const { postId, comments } = this.props;
 
 		return (
@@ -33,8 +68,16 @@ class CommentsList extends Component {
 				<CommentsCount
 					postId={postId} />
 
+				{isCreatingEntity ? (
+				<CommentEditForm
+					isNew={true}
+					comment={this.newEntity(postId)}
+					saveComment={this.saveNewEntity}
+					cancelEditComment={this.cancelNewEntity} />
+				) : (
 				<button
-					onClick={this.addComment}>add</button>
+					onClick={this.createNewEntity}>new comment</button>
+				)}
 
 				<ul>
 					{comments.map(comment => (
@@ -57,7 +100,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-	fetchCommentsForPost, 
+	fetchCommentsForPost,
 	addComment, updateComment, deleteComment
 };
 

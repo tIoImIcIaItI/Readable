@@ -1,7 +1,7 @@
 //import { combineReducers } from 'redux'; // TODO: split into multiple recuders and combine
 import { CATEGORIES_LOADED } from '../actions/categories';
-import { POSTS_LOADED, POST_LOADED, POST_UPDATED, POST_DELETED, POST_VOTES_UPDATED } from '../actions/posts';
-import { COMMENTS_LOADED, COMMENTS_COUNTED, COMMENT_UPDATED, COMMENT_DELETED, COMMENT_VOTES_UPDATED } from '../actions/comments';
+import { POSTS_LOADED, POST_LOADED, POST_ADDED, POST_UPDATED, POST_DELETED, POST_VOTES_UPDATED } from '../actions/posts';
+import { COMMENTS_LOADED, COMMENTS_COUNTED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_DELETED, COMMENT_VOTES_UPDATED } from '../actions/comments';
 
 const initialState = {
 	allCategories: [],
@@ -11,12 +11,13 @@ const initialState = {
 
 const app = (state = initialState, action) => {
 	switch (action.type) {
-		
+
 		case CATEGORIES_LOADED:
 			return {
 				...state,
 				allCategories: action.categories
 			};
+
 
 		case POSTS_LOADED:
 			return {
@@ -28,6 +29,19 @@ const app = (state = initialState, action) => {
 				...state,
 				post: action.post
 			};
+		case POST_ADDED:
+			const { post } = action;
+			const newState = { ...state };
+
+			if (newState.allPosts) // TODO: convert array of posts to dictionary of posts by ID ???
+			{
+				newState.allPosts = [
+					...newState.allPosts,
+					post
+				];
+			}
+
+			return newState;
 		case POST_UPDATED:
 			{
 				const updatedPost = action.post;
@@ -40,7 +54,7 @@ const app = (state = initialState, action) => {
 				{
 					const idx = newState.allPosts.findIndex(p => p.id === updatedPost.id);
 					if (idx >= 0) {
-						newState.allPosts = [ ...newState.allPosts ];
+						newState.allPosts = [...newState.allPosts];
 
 						newState.allPosts[idx] = updatedPost;
 					}
@@ -105,7 +119,7 @@ const app = (state = initialState, action) => {
 					newState.comments = newState.comments.filter(c => c.parentId !== id);
 				}
 
-				if (newState.commentsCount) {
+				if (newState.commentsCount !== undefined) {
 					newState.commentsCount = 0;
 				}
 
@@ -127,6 +141,45 @@ const app = (state = initialState, action) => {
 					[action.postId]: action.commentsCount
 				}
 			};
+		case COMMENT_ADDED:
+			{
+				const { comment } = action;
+				const newState = { ...state };
+
+				if (newState.commentsCount !== undefined) {
+					newState.commentsCount += 1; // presumptuous
+				}
+
+				if (newState.comments) // TODO: convert array of comments to dictionary of comments by ID ???
+				{
+					newState.comments = [
+						...newState.comments,
+						comment
+					];
+				}
+
+				if (newState.commentCounts && newState.commentCounts[comment.parentId] !== undefined) {
+					newState.commentCounts = { ...newState.commentCounts };
+					newState.commentCounts[comment.parentId] += 1 // presumptuous
+				}
+
+				// TODO: try to de-dupe this common post update code ???
+				// TODO: should really just get fresh post data from server at this point
+				if (newState.post) {
+					newState.post = { ...newState.post };
+					newState.post.commentCount += 1; // presumptuous
+				}
+
+				if (newState.allPosts) {
+					const idx = newState.allPosts.findIndex(p => p.id === comment.parentId);
+
+					if (idx >= 0) {
+						newState.allPosts = [...newState.allPosts];
+						newState.allPosts[idx].commentCount += 1; // presumptuous
+					}
+				}
+				return newState;
+			}
 		case COMMENT_UPDATED:
 			{
 				const updatedComment = action.comment;
@@ -137,6 +190,28 @@ const app = (state = initialState, action) => {
 					const idx = newState.comments.findIndex(c => c.id === updatedComment.id);
 					if (idx >= 0)
 						newState.comments[idx] = updatedComment;
+				}
+
+				return newState;
+			}
+		case COMMENT_DELETED:
+			{
+				const { id, parentId } = action;
+				const newState = { ...state };
+
+				if (newState.comments)  // TODO: convert array of comments to dictionary of comments by ID ???
+				{
+					newState.comments = newState.comments.filter(c => c.id !== id);
+				}
+
+				if (newState.commentsCount) {
+					newState.commentsCount -= 1; // presumptuous
+				}
+
+				if (newState.commentCounts) {
+					newState.commentCounts = { ...newState.commentCounts };
+
+					newState.commentCounts[parentId] -= 1; // presumptuous
 				}
 
 				return newState;
@@ -155,28 +230,6 @@ const app = (state = initialState, action) => {
 							voteScore
 						};
 					}
-				}
-
-				return newState;
-			}
-		case COMMENT_DELETED:
-			{
-				const { id, parentId } = action;
-				const newState = { ...state };
-
-				if (newState.comments)  // TODO: convert array of comments to dictionary of comments by ID ???
-				{
-					newState.comments = newState.comments.filter(c => c.id !== id);
-				}
-
-				if (newState.commentsCount) {
-					newState.commentsCount -= 1;
-				}
-
-				if (newState.commentCounts) {
-					newState.commentCounts = { ...newState.commentCounts };
-
-					newState.commentCounts[parentId] -= 1;
 				}
 
 				return newState;

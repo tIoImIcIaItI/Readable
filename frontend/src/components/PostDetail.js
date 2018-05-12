@@ -54,7 +54,7 @@ class PostDetail extends Component {
 			return <Redirect to={this.state.redirect} />
 
 		const { isEditing } = this.state;
-		const { /*allCategories,*/ post, voteUp, voteDown } = this.props;
+		const { allCategories, post, voteUp, voteDown } = this.props;
 
 		const id = this.props.match ? this.props.match.params.id : -1;
 		const timestamp = post.timestamp ? new Date(post.timestamp).toString() : '';
@@ -67,7 +67,7 @@ class PostDetail extends Component {
 
 				{isEditing ? (
 					<PostEditForm
-						/*allCategories={allCategories}*/
+						allCategories={allCategories}
 						post={post}
 						savePost={this.savePost}
 						cancelEditPost={this.cancelEditPost} />
@@ -109,8 +109,8 @@ class PostDetail extends Component {
 
 const mapStateToProps = state => {
 	return {
-		post: (state.post || {})//,
-		//allCategories: (state.allCategories || [])
+		post: (state.post || {}),
+		allCategories: (state.allCategories || [])
 	}
 };
 

@@ -1,5 +1,5 @@
 /*eslint dot-location: ["error", "object"]*/
-import { api, headers } from '../config';
+import { api, headers, jsonHeaders } from '../config';
 
 export const POSTS_LOADED = 'POSTS_LOADED';
 export const POSTS_ADD = 'POSTS_ADD';
@@ -64,47 +64,44 @@ export const fetchPostById = (postId) => dispatch => {
 		catch(console.error)
 };
 
-export const addPost = (id, timestamp, title, body, author, category) => dispatch => {
-	fetch(`http://${api}/posts/`,
+export const addPost = ({id, timestamp, author, category, title, body}) => dispatch => {
+	fetch(`http://${api}/posts`,
 		{
-			headers: headers,
+			headers: jsonHeaders,
 			method: 'POST',
-			body: {} // TODO: 
+			body: JSON.stringify({id, timestamp, author, category, title, body})
 		}).
 		then(res => {
-			// if (res.ok)
-			// 	return res.json();
-
-			console.log(res);
-			// throw new Error('TODO');
+			if (res.ok)
+				return res.json();
+			throw new Error('TODO');
 		}).
-		then(_ => {
+		then(post => {
 			dispatch(
-				postAdded(
-					id));
+				postAdded(post));
 		}).
 		catch(console.error)
 }
 
-export function postAdded(id) {
+export function postAdded(post) {
 	return {
 		type: POST_ADDED,
-		id
+		post
 	};
 }
 
-export const updatePost = (post) => dispatch => {
-	fetch(`http://${api}/posts/${post.id}`,
+export const updatePost = ({id, title, body}) => dispatch => {
+	fetch(`http://${api}/posts/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
+			headers: jsonHeaders,
 			method: 'PUT',
-			body: JSON.stringify(post)
+			body: JSON.stringify({title, body})
 		}).
 		then(res => {
-			 if (res.ok)
-				  return res.json();
-				  
-			 // throw new Error('TODO');
+			if (res.ok)
+				return res.json();
+
+			throw new Error('TODO');
 		}).
 		then(post => {
 			dispatch(
@@ -151,7 +148,7 @@ export function postDeleted(id) {
 const vote = (id, option, dispatch) => {
 	fetch(`http://${api}/posts/${id}`,
 		{
-			headers: { 'Authorization': 'whatever-you-want', 'content-type': 'application/json' },
+			headers: jsonHeaders,
 			method: 'POST',
 			body: JSON.stringify({
 				option

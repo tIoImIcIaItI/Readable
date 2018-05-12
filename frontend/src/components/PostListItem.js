@@ -40,12 +40,12 @@ class PostListItem extends Component {
 	render() {
 
 		const { isEditingPost } = this.state;
-		const { post, voteUp, voteDown, deletePost } = this.props;
+		const { post, allCategories, voteUp, voteDown, deletePost } = this.props;
 
 		return isEditingPost ? (
 			<div>
 				<PostEditForm
-					/*allCategories={allCategories}*/
+					allCategories={allCategories}
 					post={post}
 					savePost={this.savePost}
 					cancelEditPost={this.cancelEditPost} />
@@ -78,6 +78,12 @@ class PostListItem extends Component {
 	}
 }
 
+const mapStateToProps = state => {
+	return {
+		allCategories: (state.allCategories || [])
+	}
+};
+
 const mapDispatchToProps = {
 	voteUp: votePostUp,
 	voteDown: votePostDown,
@@ -85,5 +91,5 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-	null, mapDispatchToProps
+	mapStateToProps, mapDispatchToProps
 )(PostListItem);

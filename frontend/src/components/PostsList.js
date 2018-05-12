@@ -1,8 +1,11 @@
 /*eslint dot-location: ["error", "object"]*/
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import uuidv1 from 'uuid/v1';
+import { addPost } from '../actions/posts';
 import PostsSortSelector from './PostsSortSelector';
 import PostListItem from './PostListItem';
+import PostEditForm from './PostEditForm';
 
 const orderBy = (arr, prop) => (arr || []).sort((x, y) => x[prop] - y[prop]);
 const orderByDescending = (arr, prop) => (arr || []).sort((x, y) => y[prop] - x[prop]);
@@ -23,7 +26,8 @@ class PostsList extends Component {
 				label: 'Score',
 				field: 'voteScore'
 			},
-		]
+		],
+		isCreatingPost: false
 	};
 
 	filterByCategory = (posts, category) => filterBy(posts, 'category', category);
@@ -35,23 +39,50 @@ class PostsList extends Component {
 		});
 	};
 
-	createNewPost = () => {
-		// TODO: 
+	newEntity = () => ({
+		id: uuidv1(),
+		category: 'udacity', // TODO: 
+		author: '',
+		title: '',
+		body: ''
+	});
+
+	createNewEntity = () => {
+		this.setState({
+			isCreatingEntity: true
+		});
 	};
 
-	deletePost = (id) => {
+	saveNewEntity = (post) => {
+
+		this.props.addPost(post);
+
+		this.setState({
+			isCreatingEntity: false
+		});
+	};
+
+	cancelNewEntity = () => {
+		this.setState({
+			isCreatingEntity: false
+		});
+	};
+
+	deleteEntity = (id) => {
 		this.props.deletePost(id);
 	};
 
 	render() {
-		const selectedCategory =
-			this.props.match ? this.props.match.params.category : null;
+
+		const { isCreatingEntity, sortField, sortAscending } = this.state;
+		const { match, posts, allCategories } = this.props;
+
+		const selectedCategory = match ? match.params.category : null;
 
 		// TODO: fetch posts by category or all, herein
-		const posts =
-			sortBy(
-				this.filterByCategory(this.props.posts, selectedCategory),
-				this.state.sortField, this.state.sortAscending);
+		const postsToDisplay = sortBy(
+			this.filterByCategory(posts, selectedCategory),
+			sortField, sortAscending);
 
 		return (
 			<div>
@@ -61,14 +92,23 @@ class PostsList extends Component {
 					criteria={this.state.sortCriteria}
 					setSort={this.sortPosts} />
 
-				<button
-					onClick={this.createNewPost}>new post</button>
+				{isCreatingEntity ? (
+					<PostEditForm
+						isNew={true}
+						allCategories={allCategories}
+						post={this.newEntity()}
+						savePost={this.saveNewEntity}
+						cancelEditPost={this.cancelNewEntity} />
+				) : (
+						<button
+							onClick={this.createNewEntity}>new post</button>
+					)}
 
 				<ul>
-					{posts.map(post =>
+					{postsToDisplay.map(post =>
 						<li key={post.id}>
 							<PostListItem
-								post={post}/>
+								post={post} />
 						</li>
 					)}
 				</ul>
@@ -79,11 +119,16 @@ class PostsList extends Component {
 
 const mapStateToProps = state => {
 	return {
-		posts: state.allPosts
+		allCategories: (state.allCategories || []),
+		posts: (state.allPosts || [])
 	}
 };
 
+const mapDispatchToProps = {
+	addPost
+};
+
 export default connect(
-	mapStateToProps
+	mapStateToProps, mapDispatchToProps
 )(PostsList);
 

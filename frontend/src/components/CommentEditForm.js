@@ -6,13 +6,10 @@ const getTimestamp = (dt = new Date()) => dt.getTime();
 class CommentEditForm extends Component {
 
 	static propTypes = {
+		isNew: PropTypes.bool,
 		comment: PropTypes.object.isRequired,
 		saveComment: PropTypes.func.isRequired,
 		cancelEditComment: PropTypes.func.isRequired,
-	};
-
-	state = {
-		isEditing: false
 	};
 
 	onChange = (event) => {
@@ -28,10 +25,11 @@ class CommentEditForm extends Component {
 	onSubmit = (event) => {
 
 		const { comment, saveComment } = this.props;
-		const { body } = this.state;
+		const { author, body } = this.state;
 
 		saveComment({
 			...comment,
+			author: author || comment.author,
 			body: body || comment.body,
 			timestamp: getTimestamp()
 		});
@@ -40,11 +38,19 @@ class CommentEditForm extends Component {
 	};
 
 	render() {
-		const { comment } = this.props;
+
+		const { isNew, comment } = this.props;
 		const { cancelEditComment } = this.props;
 
 		return (
 			<form onSubmit={this.onSubmit}>
+
+				{isNew && (
+				<div>
+					<label htmlFor='author'>author</label>
+					<input id='author'  type='text' name='author' defaultValue={comment.author} onChange={this.onChange} />
+				</div>
+				)}
 
 				<div>
 					<label htmlFor='body'>Content</label>

@@ -22,9 +22,8 @@ class CommentDetail extends Component {
 	};
 
 	saveComment = (comment) => {
-		
-		this.props.updateComment(
-			comment.id, comment.timestamp, comment.body);
+
+		this.props.updateComment(comment);
 
 		this.setState({
 			isEditing: false
@@ -70,13 +69,13 @@ class CommentDetail extends Component {
 					voteDown={() => voteDown(comment.id)} />
 
 				{!isEditing && (
-				<div>
-					<button
-						onClick={this.editComment}>edit</button>
+					<div>
+						<button
+							onClick={this.editComment}>edit</button>
 
-					<button
-						onClick={() => deleteComment(comment.id)}>delete</button>
-				</div>
+						<button
+							onClick={() => deleteComment(comment.id)}>delete</button>
+					</div>
 				)}
 
 			</div>

@@ -7,5 +7,6 @@ const config = {
 
 export const api = `${config.server.host}:${config.server.port}`;
 export const headers = { 'Authorization': 'readable' };
+export const jsonHeaders = { ...headers, 'content-type': 'application/json' };
 
 export default config;
