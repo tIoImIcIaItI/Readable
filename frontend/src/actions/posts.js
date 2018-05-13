@@ -10,6 +10,7 @@ export const POST_UPDATE = 'POST_UPDATE';
 export const POST_UPDATED = 'POST_UPDATED';
 export const POST_VOTES_UPDATED = 'POST_VOTES_UPDATED';
 export const POST_LOADED = 'POST_LOADED';
+export const POST_LOADED_FAILED = 'POST_LOADED_FAILED';
 
 export const fetchPosts = () => dispatch => (
 	fetch(`http://${api}/posts`,
@@ -21,7 +22,7 @@ export const fetchPosts = () => dispatch => (
 				return res.json();
 
 			console.log(res);
-			throw new Error('TODO');
+			throw new Error(res);
 		}).
 		then(json => {
 			dispatch(
@@ -37,6 +38,28 @@ export function postsLoaded(posts) {
 	};
 }
 
+export const fetchPostById = (id) => dispatch => {
+	fetch(`http://${api}/posts/${id}`,
+		{
+			headers: headers
+		}).
+		then(res => {
+			if (res.ok)
+				return res.json();
+			throw new Error(res);
+		}).
+		then(post => {
+			if (post === undefined || post.id === undefined)
+				dispatch(postLoaded({ id, deleted: true }));
+			else
+				dispatch(postLoaded(post));
+		}).
+		catch(error => {
+			console.error(error);
+			dispatch(postLoadedFailed(id));
+		})
+};
+
 export function postLoaded(post) {
 	return {
 		type: POST_LOADED,
@@ -44,37 +67,25 @@ export function postLoaded(post) {
 	};
 }
 
-export const fetchPostById = (postId) => dispatch => {
-	fetch(`http://${api}/posts/${postId}`,
-		{
-			headers: headers
-		}).
-		then(res => {
-			if (res.ok)
-				return res.json();
+export function postLoadedFailed(id) {
+	return {
+		type: POST_LOADED_FAILED,
+		id
+	};
+}
 
-			console.log(res);
-			throw new Error('TODO');
-		}).
-		then(json => {
-			dispatch(
-				postLoaded(
-					json));
-		}).
-		catch(console.error)
-};
 
-export const addPost = ({id, timestamp, author, category, title, body}) => dispatch => {
+export const addPost = ({ id, timestamp, author, category, title, body }) => dispatch => {
 	fetch(`http://${api}/posts`,
 		{
 			headers: jsonHeaders,
 			method: 'POST',
-			body: JSON.stringify({id, timestamp, author, category, title, body})
+			body: JSON.stringify({ id, timestamp, author, category, title, body })
 		}).
 		then(res => {
 			if (res.ok)
 				return res.json();
-			throw new Error('TODO');
+			throw new Error(res);
 		}).
 		then(post => {
 			dispatch(
@@ -90,18 +101,18 @@ export function postAdded(post) {
 	};
 }
 
-export const updatePost = ({id, title, body}) => dispatch => {
+export const updatePost = ({ id, title, body }) => dispatch => {
 	fetch(`http://${api}/posts/${id}`,
 		{
 			headers: jsonHeaders,
 			method: 'PUT',
-			body: JSON.stringify({title, body})
+			body: JSON.stringify({ title, body })
 		}).
 		then(res => {
 			if (res.ok)
 				return res.json();
 
-			throw new Error('TODO');
+			throw new Error(res);
 		}).
 		then(post => {
 			dispatch(
@@ -128,7 +139,7 @@ export const deletePost = (id) => dispatch => {
 			if (res.ok)
 				return res.json();
 
-			throw new Error('TODO');
+			throw new Error(res);
 		}).
 		then(_ => { // TODO: should we dispatch deletions for all child comments, so the post & comment reducers don't mix ???
 			dispatch(
@@ -159,7 +170,7 @@ const vote = (id, option, dispatch) => {
 				return res.json();
 
 			console.log(res);
-			// throw new Error('TODO');
+			// throw new Error(res);
 		}).
 		then(post => {
 			dispatch(

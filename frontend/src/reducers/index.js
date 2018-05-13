@@ -1,6 +1,8 @@
 //import { combineReducers } from 'redux'; // TODO: split into multiple recuders and combine
 import { CATEGORIES_LOADED } from '../actions/categories';
-import { POSTS_LOADED, POST_LOADED, POST_ADDED, POST_UPDATED, POST_DELETED, POST_VOTES_UPDATED } from '../actions/posts';
+import { POSTS_LOADED, 
+	POST_LOADED, POST_LOADED_FAILED, 
+	POST_ADDED, POST_UPDATED, POST_DELETED, POST_VOTES_UPDATED } from '../actions/posts';
 import { COMMENTS_LOADED, COMMENTS_COUNTED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_DELETED, COMMENT_VOTES_UPDATED } from '../actions/comments';
 
 const initialState = {
@@ -28,6 +30,14 @@ const app = (state = initialState, action) => {
 			return {
 				...state,
 				post: action.post
+			};
+		case POST_LOADED_FAILED:
+			return {
+				...state,
+				post: {
+					id: action.id,
+					error: true
+				}
 			};
 		case POST_ADDED:
 			const { post } = action;

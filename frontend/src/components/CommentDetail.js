@@ -40,15 +40,18 @@ class CommentDetail extends Component {
 
 		const { isEditing } = this.state;
 		const { comment, voteUp, voteDown, deleteComment } = this.props;
+		const timestamp = comment.timestamp ? new Date(comment.timestamp).toString() : '';
 
 		return (
 			<div>
 				<h4>Comment</h4>
 
-				<div>{comment.id}</div>
+				{/*<div>{comment.id}</div>
 				<div>{comment.parentId}</div>
+				<div>{comment.timestamp}</div>*/}
 
-				<div>{comment.timestamp}</div>
+				<div>{comment.author}</div>
+				<div>{timestamp}</div>
 
 				{isEditing ? (
 					<CommentEditForm
@@ -58,25 +61,16 @@ class CommentDetail extends Component {
 				) : (
 						<div>
 							<div>{comment.body}</div>
+
+							<button onClick={this.editComment}>edit</button>
+							<button onClick={() => deleteComment(comment.id)}>delete</button>
 						</div>
 					)}
-
-				<div>{comment.author}</div>
 
 				<VoteScore
 					score={comment.voteScore}
 					voteUp={() => voteUp(comment.id)}
 					voteDown={() => voteDown(comment.id)} />
-
-				{!isEditing && (
-					<div>
-						<button
-							onClick={this.editComment}>edit</button>
-
-						<button
-							onClick={() => deleteComment(comment.id)}>delete</button>
-					</div>
-				)}
 
 			</div>
 		);

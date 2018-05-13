@@ -44,8 +44,11 @@ class PostDetail extends Component {
 	};
 
 	componentWillMount() {
-		const id = this.props.match ? this.props.match.params.id : -1;
-		this.props.fetchPostById(id);
+		const { match, fetchPostById } = this.props;
+
+		const id = match ? match.params.id : -1;
+
+		fetchPostById(id);
 	}
 
 	render() {
@@ -53,8 +56,19 @@ class PostDetail extends Component {
 		if (this.state.redirect)
 			return <Redirect to={this.state.redirect} />
 
+		const { post } = this.props;
+
+		if (post.id === undefined)
+			return (<div>...</div>);
+
+		if (post.deleted)
+			return <Redirect to='/app/error/not-found' />
+
+		if (post.error)
+			return (<div>An error occurred fetching the requested content</div>);
+
 		const { isEditing } = this.state;
-		const { allCategories, post, voteUp, voteDown } = this.props;
+		const { allCategories, voteUp, voteDown } = this.props;
 
 		const id = this.props.match ? this.props.match.params.id : -1;
 		const timestamp = post.timestamp ? new Date(post.timestamp).toString() : '';
@@ -63,7 +77,11 @@ class PostDetail extends Component {
 			<div>
 				<h2>{post.title}</h2>
 
-				<div>{post.id}</div>
+				<div>{post.author}</div>
+
+				<div>{timestamp}</div>
+
+				<div>{post.category}</div>
 
 				{isEditing ? (
 					<PostEditForm
@@ -75,30 +93,20 @@ class PostDetail extends Component {
 						<div>
 							<div>{post.title}</div>
 							<div>{post.body}</div>
+
+							<button onClick={this.editPost}>edit post</button>
+
+							<button onClick={() => this.deletePost(post.id)}>delete post</button>
 						</div>
 					)}
 
-				<div>{post.author}</div>
-				<div>{post.category}</div>
-				<div>{post.voteScore}</div>
-				<div>{timestamp}</div>
+				{/*<div>{post.id}</div>
+				<div>{post.voteScore}</div>*/}
 
 				<VoteScore
 					score={post.voteScore}
 					voteUp={() => voteUp(post.id)}
 					voteDown={() => voteDown(post.id)} />
-
-				{!isEditing && (
-					<div>
-						<button
-							onClick={this.editPost}>edit
-					</button>
-
-						<button
-							onClick={() => this.deletePost(post.id)}>delete
-					</button>
-					</div>
-				)}
 
 				< CommentsList
 					postId={id} />
