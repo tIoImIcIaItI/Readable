@@ -113,10 +113,11 @@ class PostsList extends Component {
 								icon='newspaper'
 								value={numPosts}
 								direction='column-reverse'
-								display={{icon: true, label: true}}
+								display={{icon: true, label: false}}
 							/>
 
-							<Button color="accent" variant="fab" onClick={this.createNewEntity}>
+							<Button variant='fab' color='primary'
+								onClick={this.createNewEntity}>
 								<span aria-hidden>+</span>
 								<span className='sr-only'>new post</span>
 							</Button>

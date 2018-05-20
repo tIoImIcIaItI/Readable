@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Button from 'muicss/lib/react/button';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import VoteScore from './VoteScore';
 import CommentEditForm from './CommentEditForm';
@@ -73,22 +74,28 @@ class CommentDetail extends Component {
 							<div className='comment-ts'>{timestamp}</div>
 						</div>
 
-						<div>{comment.body}</div>
+						<div className='comment-content'>
 
-						<button onClick={this.editComment}>
-							<FontAwesomeIcon icon='pencil-alt' />
-							<span className='sr-only'>edit comment</span>
-						</button>
+							<VoteScore
+								direction='column'
+								score={comment.voteScore}
+								voteUp={() => voteUp(comment.id)}
+								voteDown={() => voteDown(comment.id)} />
 
-						<button onClick={() => deleteComment(comment.id)}>
-							<FontAwesomeIcon icon='trash-alt' />
-							<span className='sr-only'>delete comment</span>
-						</button>
+							<div className='comment-body'>{comment.body}</div>
 
-						<VoteScore
-							score={comment.voteScore}
-							voteUp={() => voteUp(comment.id)}
-							voteDown={() => voteDown(comment.id)} />
+							<div className='comment-toolbar'>
+								<Button onClick={this.editComment} variant='flat'>
+									<FontAwesomeIcon icon='pencil-alt' />
+									<span className='sr-only'>edit comment</span>
+								</Button>
+
+								<Button onClick={() => deleteComment(comment.id)} variant='flat'>
+									<FontAwesomeIcon icon='trash-alt' />
+									<span className='sr-only'>delete comment</span>
+								</Button>
+							</div>
+						</div>
 
 					</div>
 				)}

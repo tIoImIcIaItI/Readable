@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Button from 'muicss/lib/react/button';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { fetchPostById, updatePost, deletePost } from '../actions/posts';
 import CommentsList from './CommentsList';
@@ -80,6 +81,7 @@ class PostDetail extends Component {
 
 		return (
 			<article className='post-detail-container'>
+
 				<header>
 					<h2>{post.title}</h2>
 
@@ -102,27 +104,33 @@ class PostDetail extends Component {
 						savePost={this.savePost}
 						cancelEditPost={this.cancelEditPost} />
 				) : (
-						<div className='post-content'>
-							<div>{post.body}</div>
+						<div>
+							<div className='post-content'>
 
-							<button onClick={this.editPost}>
-								<FontAwesomeIcon icon='pencil-alt' />
-								<span className='sr-only'>edit post</span>
-							</button>
+								<VoteScore
+									direction='column'
+									score={post.voteScore}
+									voteUp={() => voteUp(post.id)}
+									voteDown={() => voteDown(post.id)} />
 
-							<button onClick={() => deletePost(post.id)}>
-								<FontAwesomeIcon icon='trash-alt' />
-								<span className='sr-only'>delete post</span>
-							</button>
+								<div className='post-body'>{post.body}</div>
 
-							<VoteScore
-								score={post.voteScore}
-								voteUp={() => voteUp(post.id)}
-								voteDown={() => voteDown(post.id)} />
+								<div className='post-toolbar'>
+									<Button onClick={this.editPost}>
+										<FontAwesomeIcon icon='pencil-alt' />
+										<span className='sr-only'>edit post</span>
+									</Button>
+
+									<Button onClick={() => deletePost(post.id)}>
+										<FontAwesomeIcon icon='trash-alt' />
+										<span className='sr-only'>delete post</span>
+									</Button>
+								</div>
+
+							</div>
 
 							<CommentsList
 								postId={id} />
-
 						</div>
 					)}
 

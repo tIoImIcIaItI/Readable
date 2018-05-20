@@ -29,7 +29,7 @@ class CommentsCount extends Component {
 				label={count !== 1 ? 'comments' : 'comment'}
 				value={count}
 				direction='column-reverse'
-				display={{label: true, icon: true}} />
+				display={{icon: true, label: false}} />
 		);
 	}
 }

@@ -90,9 +90,9 @@ class CommentsList extends Component {
 								label={authorCount !== 1 ? 'authors' : 'author'}
 								value={authorCount} 
 								direction='column-reverse'
-								display={{icon: true, label: true}}/>
+								display={{icon: true, label: false}}/>
 
-							<Button variant="fab" color="accent"
+							<Button variant='fab' color='primary'
 								onClick={this.createNewEntity}>
 								<span aria-hidden>+</span>
 								<span className='sr-only'>new comment</span>
