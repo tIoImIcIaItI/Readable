@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import VoteScore from './VoteScore';
 import CommentEditForm from './CommentEditForm';
 import { updateComment, deleteComment, voteCommentUp, voteCommentDown } from '../actions/comments';
+
+const authorTag = (entity) => ((entity.author || '')[0] || '').toUpperCase();
 
 class CommentDetail extends Component {
 
@@ -38,20 +42,20 @@ class CommentDetail extends Component {
 
 	render() {
 
+		const { comment } = this.props;
+
+		if (comment.id === undefined)
+			return (<div>...</div>);
+
 		const { isEditing } = this.state;
-		const { comment, voteUp, voteDown, deleteComment } = this.props;
-		const timestamp = comment.timestamp ? new Date(comment.timestamp).toString() : '';
+		const { voteUp, voteDown, deleteComment } = this.props;
+
+		const timestamp = comment.timestamp ? moment(comment.timestamp).fromNow() : '';
+		const tag = authorTag(comment);
 
 		return (
-			<div>
-				<h4>Comment</h4>
-
-				{/*<div>{comment.id}</div>
-				<div>{comment.parentId}</div>
-				<div>{comment.timestamp}</div>*/}
-
-				<div>{comment.author}</div>
-				<div>{timestamp}</div>
+			<article className='comment'>
+				{/*<h2>Comment</h2>*/}
 
 				{isEditing ? (
 					<CommentEditForm
@@ -59,20 +63,37 @@ class CommentDetail extends Component {
 						saveComment={this.saveComment}
 						cancelEditComment={this.cancelEditComment} />
 				) : (
-						<div>
-							<div>{comment.body}</div>
+					<div>
+						<div className='comment-subheader'>
+							<div className='comment-author-widget'>
+								<span className='comment-author-tag'>{tag}</span>
+								<span className='comment-author-name'>{comment.author}</span>
+							</div>
 
-							<button onClick={this.editComment}>edit</button>
-							<button onClick={() => deleteComment(comment.id)}>delete</button>
+							<div className='comment-ts'>{timestamp}</div>
 						</div>
-					)}
 
-				<VoteScore
-					score={comment.voteScore}
-					voteUp={() => voteUp(comment.id)}
-					voteDown={() => voteDown(comment.id)} />
+						<div>{comment.body}</div>
 
-			</div>
+						<button onClick={this.editComment}>
+							<FontAwesomeIcon icon='pencil-alt' />
+							<span className='sr-only'>edit comment</span>
+						</button>
+
+						<button onClick={() => deleteComment(comment.id)}>
+							<FontAwesomeIcon icon='trash-alt' />
+							<span className='sr-only'>delete comment</span>
+						</button>
+
+						<VoteScore
+							score={comment.voteScore}
+							voteUp={() => voteUp(comment.id)}
+							voteDown={() => voteDown(comment.id)} />
+
+					</div>
+				)}
+
+			</article>
 		);
 	}
 }

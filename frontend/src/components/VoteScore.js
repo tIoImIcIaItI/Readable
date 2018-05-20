@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class VoteScore extends Component {
 
@@ -15,13 +16,17 @@ class VoteScore extends Component {
 
 		return (
 			<div>
-				<span>{score}</span>
+				<button onClick={voteUp}>
+					<FontAwesomeIcon icon='thumbs-up' />
+					<span className='sr-only'>vote for</span>				
+				</button>
 
-				<button
-					onClick={voteUp}>+1</button>
+				<button onClick={voteDown}>
+					<FontAwesomeIcon icon='thumbs-down' />
+					<span className='sr-only'>vote against</span>				
+				</button>
 
-				<button
-					onClick={voteDown}>-1</button>
+				<span>{score} votes</span>
 
 			</div>
 		);

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { countCommentsForPost } from '../actions/comments';
+import Stat from './Stat';
 
 class CommentsCount extends Component {
 
@@ -23,9 +24,12 @@ class CommentsCount extends Component {
 		const count = commentCounts[postId] || 0;
 
 		return (
-			<div>
-				Comments Count: {count}
-			</div>
+			<Stat 
+				icon='comments'
+				label={count !== 1 ? 'comments' : 'comment'}
+				value={count}
+				direction='column-reverse'
+				display={{label: true, icon: true}} />
 		);
 	}
 }

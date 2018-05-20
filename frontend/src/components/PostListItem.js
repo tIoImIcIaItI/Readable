@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Panel from 'muicss/lib/react/panel';
+import moment from 'moment';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { votePostUp, votePostDown, updatePost, deletePost } from '../actions/posts';
 import VoteScore from './VoteScore';
 import CommentsCount from './CommentsCount';
@@ -30,7 +33,7 @@ class PostListItem extends Component {
 			isEditingPost: false
 		});
 	};
-	
+
 	cancelEditPost = () => {
 		this.setState({
 			isEditingPost: false
@@ -41,40 +44,44 @@ class PostListItem extends Component {
 
 		const { isEditingPost } = this.state;
 		const { post, allCategories, voteUp, voteDown, deletePost } = this.props;
+		const timestamp = post.timestamp ? moment(post.timestamp).fromNow() : '';
 
 		return isEditingPost ? (
-			<div>
-				<PostEditForm
-					allCategories={allCategories}
-					post={post}
-					savePost={this.savePost}
-					cancelEditPost={this.cancelEditPost} />
-			</div>
+			<PostEditForm
+				allCategories={allCategories}
+				post={post}
+				savePost={this.savePost}
+				cancelEditPost={this.cancelEditPost} />
 			) : (
-			<div>
-				<Link to={`/${post.category}/${post.id}`}>{post.title}</Link>
+				<Panel>
+					<article className='post-item-container'>
+						<Link to={`/${post.category}/${post.id}`}>{post.title}</Link>
 
-				<div>{post.author}</div>
-				<div>{new Date(post.timestamp).toString()}</div>
+						<div>{post.author}</div>
 
-				<CommentsCount
-					postId={post.id} />
+						<div className='post-ts'>{timestamp}</div>
 
-				<VoteScore
-					score={post.voteScore}
-					voteUp={() => voteUp(post.id)}
-					voteDown={() => voteDown(post.id)} />
+						<CommentsCount
+							postId={post.id} />
 
-				<button onClick={this.editPost}>
-					edit post
-				</button>
+						<VoteScore
+							score={post.voteScore}
+							voteUp={() => voteUp(post.id)}
+							voteDown={() => voteDown(post.id)} />
 
-				<button
-					onClick={() => deletePost(post.id)}>delete post
-				</button>
-				
-			</div>
-		);
+						<button onClick={this.editPost}>
+							<FontAwesomeIcon icon='pencil-alt' />
+							<span className='sr-only'>edit post</span>
+						</button>
+
+						<button onClick={() => deletePost(post.id)}>
+							<FontAwesomeIcon icon='trash-alt' />
+							<span className='sr-only'>delete post</span>
+						</button>
+
+					</article>
+				</Panel>
+			);
 	}
 }
 

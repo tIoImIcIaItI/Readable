@@ -1,11 +1,13 @@
 /*eslint dot-location: ["error", "object"]*/
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Button from 'muicss/lib/react/button';
 import uuidv1 from 'uuid/v1';
 import { addPost } from '../actions/posts';
 import PostsSortSelector from './PostsSortSelector';
 import PostListItem from './PostListItem';
 import PostEditForm from './PostEditForm';
+import Stat from './Stat';
 
 const orderBy = (arr, prop) => (arr || []).sort((x, y) => x[prop] - y[prop]);
 const orderByDescending = (arr, prop) => (arr || []).sort((x, y) => y[prop] - x[prop]);
@@ -41,7 +43,7 @@ class PostsList extends Component {
 
 	newEntity = () => ({
 		id: uuidv1(),
-		category: 'udacity', // TODO: 
+		category: '',
 		author: '',
 		title: '',
 		body: ''
@@ -84,13 +86,11 @@ class PostsList extends Component {
 			this.filterByCategory(posts, selectedCategory),
 			sortField, sortAscending);
 
+		const numPosts = postsToDisplay.length;
+
 		return (
 			<div>
-				<h2>Posts</h2>
-
-				<PostsSortSelector
-					criteria={this.state.sortCriteria}
-					setSort={this.sortPosts} />
+				<h2 className='sr-only'>Posts</h2>
 
 				{isCreatingEntity ? (
 					<PostEditForm
@@ -100,18 +100,40 @@ class PostsList extends Component {
 						savePost={this.saveNewEntity}
 						cancelEditPost={this.cancelNewEntity} />
 				) : (
-						<button
-							onClick={this.createNewEntity}>new post</button>
-					)}
+					<div>
 
-				<ul>
-					{postsToDisplay.map(post =>
-						<li key={post.id}>
-							<PostListItem
-								post={post} />
-						</li>
-					)}
-				</ul>
+						<div className='post-list-toolbar toolbar'>
+
+							<PostsSortSelector
+								criteria={this.state.sortCriteria}
+								setSort={this.sortPosts} />
+
+							<Stat 
+								label={numPosts !== 1 ? 'posts' : 'post'}
+								icon='newspaper'
+								value={numPosts}
+								direction='column-reverse'
+								display={{icon: true, label: true}}
+							/>
+
+							<Button color="accent" variant="fab" onClick={this.createNewEntity}>
+								<span aria-hidden>+</span>
+								<span className='sr-only'>new post</span>
+							</Button>
+
+						</div>
+
+						<ul>
+							{postsToDisplay.map(post =>
+								<li key={post.id} className='post-list-item'>
+									<PostListItem
+										post={post} />
+								</li>
+							)}
+						</ul>
+					</div>
+				)}
+
 			</div>
 		);
 	}

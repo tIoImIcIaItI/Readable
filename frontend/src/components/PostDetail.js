@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import moment from 'moment';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { fetchPostById, updatePost, deletePost } from '../actions/posts';
 import CommentsList from './CommentsList';
 import VoteScore from './VoteScore';
 import { votePostUp, votePostDown } from '../actions/posts';
 import PostEditForm from './PostEditForm';
+
+const authorTag = (entity) => ((entity.author || '')[0] || '').toUpperCase();
 
 class PostDetail extends Component {
 
@@ -71,17 +75,25 @@ class PostDetail extends Component {
 		const { allCategories, voteUp, voteDown } = this.props;
 
 		const id = this.props.match ? this.props.match.params.id : -1;
-		const timestamp = post.timestamp ? new Date(post.timestamp).toString() : '';
+		const timestamp = post.timestamp ? moment(post.timestamp).fromNow() : '';
+		const tag = authorTag(post);
 
 		return (
-			<div>
-				<h2>{post.title}</h2>
+			<article className='post-detail-container'>
+				<header>
+					<h2>{post.title}</h2>
 
-				<div>{post.author}</div>
+					<div className='post-subheader'>
+						<div className='post-author-widget'>
+							<span className='post-author-tag'>{tag}</span>
+							<span className='post-author-name'>{post.author}</span>
+						</div>
 
-				<div>{timestamp}</div>
+						<div className='post-ts'>{timestamp}</div>
+					</div>
 
-				<div>{post.category}</div>
+					{/*<div>{post.category}</div>*/}
+				</header>
 
 				{isEditing ? (
 					<PostEditForm
@@ -90,27 +102,31 @@ class PostDetail extends Component {
 						savePost={this.savePost}
 						cancelEditPost={this.cancelEditPost} />
 				) : (
-						<div>
-							<div>{post.title}</div>
+						<div className='post-content'>
 							<div>{post.body}</div>
 
-							<button onClick={this.editPost}>edit post</button>
+							<button onClick={this.editPost}>
+								<FontAwesomeIcon icon='pencil-alt' />
+								<span className='sr-only'>edit post</span>
+							</button>
 
-							<button onClick={() => this.deletePost(post.id)}>delete post</button>
+							<button onClick={() => deletePost(post.id)}>
+								<FontAwesomeIcon icon='trash-alt' />
+								<span className='sr-only'>delete post</span>
+							</button>
+
+							<VoteScore
+								score={post.voteScore}
+								voteUp={() => voteUp(post.id)}
+								voteDown={() => voteDown(post.id)} />
+
+							<CommentsList
+								postId={id} />
+
 						</div>
 					)}
 
-				{/*<div>{post.id}</div>
-				<div>{post.voteScore}</div>*/}
-
-				<VoteScore
-					score={post.voteScore}
-					voteUp={() => voteUp(post.id)}
-					voteDown={() => voteDown(post.id)} />
-
-				< CommentsList
-					postId={id} />
-			</div>
+			</article>
 		);
 	}
 }

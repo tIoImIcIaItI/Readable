@@ -11,11 +11,12 @@ class CategoriesList extends Component {
 
 	render() {
 		return (
-			<div>
-				<h1>Categories</h1>
-				<ul>
+			<div className='categories-list-container'>
+				<h2 className='sr-only'>Categories</h2>
+
+				<ul id='categories-list'>
 					{!this.props.match || !this.props.match.params.category ?
-						<p>All Categories</p> :
+						<li>All Categories</li> :
 						<li key={-1}>
 							<Link to={'/'}>All Categories</Link>
 						</li>
@@ -23,7 +24,7 @@ class CategoriesList extends Component {
 					{this.props.categories.map(category =>
 						<li key={category.name}>
 							{!this.props.match || this.props.match.params.category === category.name ?
-								<p>{category.name}</p> :
+								category.name :
 								<Link to={`/${category.path}`}>{category.name}</Link>
 							}
 						</li>

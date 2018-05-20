@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import CategoriesList from './components/CategoriesList';
 import { Route, Switch } from 'react-router-dom';
+import { Appbar } from 'muicss/react';
 import PostsList from './components/PostsList';
 import PostDetail from './components/PostDetail';
 import NotFound from './components/NotFound';
@@ -14,13 +15,19 @@ class App extends Component {
 
       <div className="App">
 
-        <header className="App-header">
-          <h1 className="App-title">Readable</h1>
-        </header>
+        <header>
+          <Appbar>
 
-        <nav>
-          <Route path="/:category?" component={CategoriesList} />
-        </nav>
+            <h1 className="App-title mui--appbar-height mui--appbar-line-height">
+              Readable
+            </h1>
+
+            <nav>
+              <Route path="/:category?" component={CategoriesList} />
+            </nav>
+
+          </Appbar>
+        </header>
 
         <main>
           <Switch>
@@ -32,6 +39,12 @@ class App extends Component {
             <Route component={NotFound} />
           </Switch>
         </main>
+
+        <footer>
+          <Appbar className='footer'>
+            <span className='footer-copyright'>Copyright © 2018 Readable</span>
+          </Appbar>
+        </footer>
 
       </div>
     );

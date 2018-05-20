@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
+import Form from 'muicss/lib/react/form';
+import Input from 'muicss/lib/react/input';
+import Textarea from 'muicss/lib/react/textarea';
+// import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { Button } from 'muicss/react';
 
 const getTimestamp = (dt = new Date()) => dt.getTime();
 
@@ -43,25 +48,33 @@ class CommentEditForm extends Component {
 		const { cancelEditComment } = this.props;
 
 		return (
-			<form onSubmit={this.onSubmit}>
+			<Form onSubmit={this.onSubmit} className='form-inline'>
 
 				{isNew && (
-				<div>
-					<label htmlFor='author'>author</label>
-					<input id='author'  type='text' name='author' defaultValue={comment.author} onChange={this.onChange} />
-				</div>
+					<div>
+						<label htmlFor='author'>Author</label>
+						<Input placeholder='author' id='author' type='text' name='author' defaultValue={comment.author} onChange={this.onChange} />
+					</div>
 				)}
 
 				<div>
-					<label htmlFor='body'>Content</label>
-					<textarea id='body' name='body' defaultValue={comment.body} onChange={this.onChange} />
+					<label htmlFor='body'>Comment</label>
+					<Textarea placeholder='comment' id='body' name='body' defaultValue={comment.body} onChange={this.onChange} />
 				</div>
 
-				<button onClick={cancelEditComment}>cancel</button>
+				<Button variant='flat'
+				onClick={cancelEditComment}>
+					{/*<FontAwesomeIcon icon='ban' />*/}
+					<span >cancel</span>
+				</Button>
 
-				<button type='submit'>save</button>
+				<Button variant='raised' color="primary"
+				type='submit'>
+					{/*<FontAwesomeIcon icon='save' />*/}
+					<span >save</span>
+				</Button>
 
-			</form>
+			</Form>
 		);
 	}
 }
