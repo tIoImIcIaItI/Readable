@@ -3,10 +3,8 @@ import { PropTypes } from 'prop-types';
 import Form from 'muicss/lib/react/form';
 import Input from 'muicss/lib/react/input';
 import Textarea from 'muicss/lib/react/textarea';
-// import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Button } from 'muicss/react';
-
-const getTimestamp = (dt = new Date()) => dt.getTime();
+import { getTimestamp, notEmpty, setPropertyFromEitherOf, isValid } from '../formUtils';
 
 class CommentEditForm extends Component {
 
@@ -17,13 +15,40 @@ class CommentEditForm extends Component {
 		cancelEditComment: PropTypes.func.isRequired,
 	};
 
+	state = {
+		isValid: false
+	};
+
+	formFields = [
+		{ name: 'author', rule: notEmpty },
+		{ name: 'body', rule: notEmpty }
+	];
+
+	componentWillMount() {
+
+		// Ensure we copy any existing form field values into our state,
+		// to simplify validation and submission logic
+
+		const copyFieldFromStateOrProp = (obj, name) => 
+			setPropertyFromEitherOf(
+				obj, name, this.state, this.props.comment);
+
+		const newState = {};
+
+		this.formFields.forEach(f => 
+			copyFieldFromStateOrProp(newState, f.name));
+
+		this.setState(newState);
+	}
+
 	onChange = (event) => {
 		// https://reactjs.org/docs/forms.html
 		const target = event.target || {};
 		const value = target.type === 'checkbox' ? target.checked : target.value;
 
 		this.setState({
-			[target.name]: value
+			[target.name]: value,
+			isValid: isValid(this.formFields, this.state)
 		});
 	};
 
@@ -34,8 +59,7 @@ class CommentEditForm extends Component {
 
 		saveComment({
 			...comment,
-			author: author || comment.author,
-			body: body || comment.body,
+			author,	body,
 			timestamp: getTimestamp()
 		});
 
@@ -44,8 +68,9 @@ class CommentEditForm extends Component {
 
 	render() {
 
-		const { isNew, comment } = this.props;
-		const { cancelEditComment } = this.props;
+		const { isNew, comment, cancelEditComment } = this.props;
+
+		const isNotValid = !isValid(this.formFields, this.state);
 
 		return (
 			<Form onSubmit={this.onSubmit} className='form-inline'>
@@ -53,13 +78,15 @@ class CommentEditForm extends Component {
 				{isNew && (
 					<div>
 						<label htmlFor='author'>Author</label>
-						<Input placeholder='author' id='author' type='text' name='author' defaultValue={comment.author} onChange={this.onChange} />
+						<Input placeholder='author' id='author' type='text' name='author' 
+							defaultValue={comment.author} onChange={this.onChange} />
 					</div>
 				)}
 
 				<div>
 					<label htmlFor='body'>Comment</label>
-					<Textarea placeholder='comment' id='body' name='body' defaultValue={comment.body} onChange={this.onChange} />
+					<Textarea placeholder='comment' id='body' name='body' 
+						defaultValue={comment.body} onChange={this.onChange} />
 				</div>
 
 				<Button variant='flat'
@@ -67,8 +94,7 @@ class CommentEditForm extends Component {
 					<span >cancel</span>
 				</Button>
 
-				<Button variant='raised' color="primary"
-					type='submit'>
+				<Button variant='raised' color="primary" disabled={isNotValid} type='submit'>
 					<span >save</span>
 				</Button>
 
