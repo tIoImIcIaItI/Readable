@@ -64,12 +64,12 @@ class PostListItem extends Component {
 						<h1><Link to={`/${post.category}/${post.id}`}>{post.title}</Link></h1>
 
 						<div>
-							<Button onClick={this.editPost} variant='flat'>
+							<Button onClick={this.editPost}>
 								<FontAwesomeIcon icon='pencil-alt' />
 								<span className='sr-only'>edit post</span>
 							</Button>
 
-							<Button onClick={() => deletePost(post.id)} variant='flat'>
+							<Button onClick={() => deletePost(post.id)}>
 								<FontAwesomeIcon icon='trash-alt' />
 								<span className='sr-only'>delete post</span>
 							</Button>
