@@ -121,7 +121,7 @@ class PostDetail extends Component {
 									<span className='sr-only'>edit post</span>
 								</Button>
 
-								<Button onClick={() => deletePost(post.id)}>
+								<Button onClick={() => this.deletePost(post.id)}>
 									<FontAwesomeIcon icon='trash-alt' />
 									<span className='sr-only'>delete post</span>
 								</Button>
