@@ -1,0 +1,115 @@
+/*
+#f3f3f3
+#f9fafc
+#304269
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    background-color: #f9fafc;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f9fafc;
+    font-family: 'Roboto', sans-serif;
+}
+
+#root {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 42rem;
+}
+
+ul, ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    margin: 0.5em;
+}
+
+header, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+.mui-appbar {
+    padding: 0.1rem 1rem;
+    color: #f9fafc;
+    background-color: #304269;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.sr-only { /* https://webaim.org/techniques/css/invisiblecontent/ */
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+header h1, nav {
+    display: inline;
+}
+
+.footer {
+    font-size: small;
+    width: 100%;
+    max-width: 42rem;
+    padding: 0.1rem 1rem;
+}
+
+.footer-copyright {
+    margin: 1rem 0;
+}
+
+.toolbar {
+    background-color: #f3f3f3;
+    padding: 0.5rem 1rem;
+    display: flex;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mui-btn {
+    font-size: 0.75rem;
+    margin: 6px 12px;
+}
+
+label {
+    color: #668;
+    font-size: small;
+}
+
+.form-inline {
+    padding: 2rem 1rem;
+    background-color: white;
+}
+
+.author-tag {
+    display: inline-block;
+    color: white;
+    background-color: #304269;
+    width: 2em;
+    height: 2em;
+    border-radius: 25%;
+    line-height: 2em;
+    text-align: center;
+    vertical-align: middle;
+}

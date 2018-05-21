@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'muicss/lib/react/button';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import '../styles/votes.css';
 
 class VoteScore extends Component {
 

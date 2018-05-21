@@ -56,7 +56,6 @@ class CommentDetail extends Component {
 
 		return (
 			<article className='comment'>
-				{/*<h2>Comment</h2>*/}
 
 				{isEditing ? (
 					<CommentEditForm
@@ -67,7 +66,7 @@ class CommentDetail extends Component {
 					<div>
 						<div className='comment-subheader'>
 							<div className='comment-author-widget'>
-								<span className='comment-author-tag'>{tag}</span>
+								<span className='comment-author-tag author-tag'>{tag}</span>
 								<span className='comment-author-name'>{comment.author}</span>
 							</div>
 
@@ -85,12 +84,12 @@ class CommentDetail extends Component {
 							<div className='comment-body'>{comment.body}</div>
 
 							<div className='comment-toolbar'>
-								<Button onClick={this.editComment} variant='flat'>
+								<Button onClick={this.editComment} >
 									<FontAwesomeIcon icon='pencil-alt' />
 									<span className='sr-only'>edit comment</span>
 								</Button>
 
-								<Button onClick={() => deleteComment(comment.id)} variant='flat'>
+								<Button onClick={() => deleteComment(comment.id)} >
 									<FontAwesomeIcon icon='trash-alt' />
 									<span className='sr-only'>delete comment</span>
 								</Button>

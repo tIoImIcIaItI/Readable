@@ -6,7 +6,7 @@ import { Appbar } from 'muicss/react';
 import PostsList from './components/PostsList';
 import PostDetail from './components/PostDetail';
 import NotFound from './components/NotFound';
-import './App.css';
+import './styles/app.css';
 
 class App extends Component {
 

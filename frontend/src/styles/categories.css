@@ -1,0 +1,23 @@
+#categories-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+.categories-list-container {
+    display: inline;
+    margin-left: 1rem;
+    font-size: small;
+}
+
+#categories-list li {
+    display: inline;
+    margin: 0.5rem;
+    text-transform: uppercase;
+    color: #F26101;
+}
+
+    #categories-list li a {
+        display: inline;
+        text-decoration: none;
+        color: #F9FAFC;
+    }

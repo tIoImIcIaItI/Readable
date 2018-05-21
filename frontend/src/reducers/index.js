@@ -1,15 +1,17 @@
 //import { combineReducers } from 'redux'; // TODO: split into multiple recuders and combine
 import { CATEGORIES_LOADED } from '../actions/categories';
-import { POSTS_LOADED, 
-	POST_LOADED, POST_LOADED_FAILED, 
-	POST_ADDED, POST_UPDATED, POST_DELETED, POST_VOTES_UPDATED } from '../actions/posts';
+import {
+	POSTS_LOADED,
+	POST_LOADED, POST_LOADED_FAILED,
+	POST_ADDED, POST_UPDATED, POST_DELETED, POST_VOTES_UPDATED
+} from '../actions/posts';
 import { COMMENTS_LOADED, COMMENTS_COUNTED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_DELETED, COMMENT_VOTES_UPDATED } from '../actions/comments';
 
 const initialState = {
 	allCategories: [],
 	allPosts: [],
 	commentCounts: {}
-}
+};
 
 const app = (state = initialState, action) => {
 	switch (action.type) {
@@ -40,18 +42,20 @@ const app = (state = initialState, action) => {
 				}
 			};
 		case POST_ADDED:
-			const { post } = action;
-			const newState = { ...state };
-
-			if (newState.allPosts) // TODO: convert array of posts to dictionary of posts by ID ???
 			{
-				newState.allPosts = [
-					...newState.allPosts,
-					post
-				];
-			}
+				const { post } = action;
+				const newState = { ...state };
 
-			return newState;
+				if (newState.allPosts) // TODO: convert array of posts to dictionary of posts by ID ???
+				{
+					newState.allPosts = [
+						...newState.allPosts,
+						post
+					];
+				}
+
+				return newState;
+			}
 		case POST_UPDATED:
 			{
 				const updatedPost = action.post;
@@ -92,7 +96,7 @@ const app = (state = initialState, action) => {
 							...newState.allPosts
 						];
 						newState.allPosts[idx] = {
-							...newState.allPosts[idx],
+							...newState.allPosts[idx]
 						};
 						newState.allPosts[idx].voteScore =
 							voteScore;
@@ -115,7 +119,7 @@ const app = (state = initialState, action) => {
 					newState.post = {
 						...newState.post,
 						deleted: true // this assumes the server did what we think it should have done; if the updated post is returned, use it here instead
-					}
+					};
 				}
 
 				// TODO: find a way to de-dupe this logic with COMMENT_DELETED reducer
@@ -170,7 +174,7 @@ const app = (state = initialState, action) => {
 
 				if (newState.commentCounts && newState.commentCounts[comment.parentId] !== undefined) {
 					newState.commentCounts = { ...newState.commentCounts };
-					newState.commentCounts[comment.parentId] += 1 // presumptuous
+					newState.commentCounts[comment.parentId] += 1; // presumptuous
 				}
 
 				// TODO: try to de-dupe this common post update code ???

@@ -24,12 +24,12 @@ class CommentsCount extends Component {
 		const count = commentCounts[postId] || 0;
 
 		return (
-			<Stat 
+			<Stat
 				icon='comments'
 				label={count !== 1 ? 'comments' : 'comment'}
 				value={count}
 				direction='column-reverse'
-				display={{icon: true, label: false}} />
+				display={{ icon: true, label: false }} />
 		);
 	}
 }

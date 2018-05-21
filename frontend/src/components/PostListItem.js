@@ -55,59 +55,59 @@ class PostListItem extends Component {
 				post={post}
 				savePost={this.savePost}
 				cancelEditPost={this.cancelEditPost} />
-		) : (
-				<Panel>
-					<article className='post-item-container'>
+			) : (
+			<Panel>
+				<article className='post-item-container'>
 
-						<header className='post-item-header'>
+					<header className='post-item-header'>
 
-							<h1><Link to={`/${post.category}/${post.id}`}>{post.title}</Link></h1>
+						<h1><Link to={`/${post.category}/${post.id}`}>{post.title}</Link></h1>
 
-							<div>
-								<Button onClick={this.editPost} variant='flat'>
-									<FontAwesomeIcon icon='pencil-alt' />
-									<span className='sr-only'>edit post</span>
-								</Button>
+						<div>
+							<Button onClick={this.editPost} variant='flat'>
+								<FontAwesomeIcon icon='pencil-alt' />
+								<span className='sr-only'>edit post</span>
+							</Button>
 
-								<Button onClick={() => deletePost(post.id)} variant='flat'>
-									<FontAwesomeIcon icon='trash-alt' />
-									<span className='sr-only'>delete post</span>
-								</Button>
-							</div>
-
-						</header>
-
-						<div className='post-summary'>
-							<Stat
-								label='author'
-								icon='user'
-								value={post.author}
-								direction='column-reverse'
-								display={{ icon: true, label: false }}
-							/>
-
-							<Stat
-								label='edited'
-								icon='calendar'
-								value={timestamp}
-								direction='column-reverse'
-								display={{ icon: true, label: false }}
-							/>
-
-							<CommentsCount
-								postId={post.id} />
+							<Button onClick={() => deletePost(post.id)} variant='flat'>
+								<FontAwesomeIcon icon='trash-alt' />
+								<span className='sr-only'>delete post</span>
+							</Button>
 						</div>
 
-						<span className='post-body-preview'>{body}</span>
+					</header>
 
-						<VoteScore
-							score={post.voteScore}
-							voteUp={() => voteUp(post.id)}
-							voteDown={() => voteDown(post.id)} />
+					<div className='post-summary'>
+						<Stat
+							label='author'
+							icon='user'
+							value={post.author}
+							direction='column-reverse'
+							display={{ icon: true, label: false }}
+						/>
 
-					</article>
-				</Panel>
-			);
+						<Stat
+							label='edited'
+							icon='calendar'
+							value={timestamp}
+							direction='column-reverse'
+							display={{ icon: true, label: false }}
+						/>
+
+						<CommentsCount
+							postId={post.id} />
+					</div>
+
+					<span className='post-body-preview'>{body}</span>
+
+					<VoteScore
+						score={post.voteScore}
+						voteUp={() => voteUp(post.id)}
+						voteDown={() => voteDown(post.id)} />
+
+				</article>
+			</Panel>
+		);
 	}
 }
 

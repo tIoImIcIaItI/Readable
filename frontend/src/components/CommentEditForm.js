@@ -63,14 +63,12 @@ class CommentEditForm extends Component {
 				</div>
 
 				<Button variant='flat'
-				onClick={cancelEditComment}>
-					{/*<FontAwesomeIcon icon='ban' />*/}
+					onClick={cancelEditComment}>
 					<span >cancel</span>
 				</Button>
 
 				<Button variant='raised' color="primary"
-				type='submit'>
-					{/*<FontAwesomeIcon icon='save' />*/}
+					type='submit'>
 					<span >save</span>
 				</Button>
 

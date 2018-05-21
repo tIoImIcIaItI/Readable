@@ -21,7 +21,6 @@ export const fetchPosts = () => dispatch => (
 			if (res.ok)
 				return res.json();
 
-			console.log(res);
 			throw new Error(res);
 		}).
 		then(json => {
@@ -46,10 +45,11 @@ export const fetchPostById = (id) => dispatch => {
 		then(res => {
 			if (res.ok)
 				return res.json();
+
 			throw new Error(res);
 		}).
 		then(post => {
-			if (post === undefined || post.id === undefined)
+			if (!post || post.id === undefined)
 				dispatch(postLoaded({ id, deleted: true }));
 			else
 				dispatch(postLoaded(post));
@@ -57,7 +57,7 @@ export const fetchPostById = (id) => dispatch => {
 		catch(error => {
 			console.error(error);
 			dispatch(postLoadedFailed(id));
-		})
+		});
 };
 
 export function postLoaded(post) {
@@ -91,8 +91,8 @@ export const addPost = ({ id, timestamp, author, category, title, body }) => dis
 			dispatch(
 				postAdded(post));
 		}).
-		catch(console.error)
-}
+		catch(console.error);
+};
 
 export function postAdded(post) {
 	return {
@@ -119,8 +119,8 @@ export const updatePost = ({ id, title, body }) => dispatch => {
 				postUpdated(
 					post));
 		}).
-		catch(console.error)
-}
+		catch(console.error);
+};
 
 export function postUpdated(post) {
 	return {
@@ -141,13 +141,13 @@ export const deletePost = (id) => dispatch => {
 
 			throw new Error(res);
 		}).
-		then(_ => { // TODO: should we dispatch deletions for all child comments, so the post & comment reducers don't mix ???
+		then(() => { // TODO: should we dispatch deletions for all child comments, so the post & comment reducers don't mix ???
 			dispatch(
 				postDeleted(
 					id));
 		}).
-		catch(console.error)
-}
+		catch(console.error);
+};
 
 export function postDeleted(id) {
 	return {
@@ -169,15 +169,14 @@ const vote = (id, option, dispatch) => {
 			if (res.ok)
 				return res.json();
 
-			console.log(res);
-			// throw new Error(res);
+			throw new Error(res);
 		}).
 		then(post => {
 			dispatch(
 				postVotesUpdated(
 					post));
 		}).
-		catch(console.error)
+		catch(console.error);
 };
 
 export function postVotesUpdated(post) {

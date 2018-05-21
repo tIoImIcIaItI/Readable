@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from 'muicss/lib/react/button';
-// import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import uuidv1 from 'uuid/v1';
 import { fetchCommentsForPost, addComment, deleteComment, updateComment } from '../actions/comments';
 import CommentsCount from './CommentsCount';
 import CommentDetail from './CommentDetail';
 import CommentEditForm from './CommentEditForm';
 import Stat from './Stat';
+import '../styles/comments.css'
 
 class CommentsList extends Component {
 
@@ -64,7 +64,7 @@ class CommentsList extends Component {
 		const { isCreatingEntity } = this.state;
 		const { postId, comments } = this.props;
 
-		const sortedComments = comments.slice().sort((a,b) => b.timestamp - a.timestamp);
+		const sortedComments = comments.slice().sort((a, b) => b.timestamp - a.timestamp);
 		const authorCount = [...new Set(comments.map(c => c.author))].length;
 
 		return (
@@ -88,9 +88,9 @@ class CommentsList extends Component {
 							<Stat
 								icon='users'
 								label={authorCount !== 1 ? 'authors' : 'author'}
-								value={authorCount} 
+								value={authorCount}
 								direction='column-reverse'
-								display={{icon: true, label: false}}/>
+								display={{ icon: true, label: false }} />
 
 							<Button variant='fab' color='primary'
 								onClick={this.createNewEntity}>

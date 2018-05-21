@@ -1,0 +1,48 @@
+.comments-list-container {
+    padding: 2rem 1rem;
+}
+
+article.comment {
+    border-bottom: #eee 1px solid;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    padding-bottom: 1rem;
+}
+
+.comment-subheader {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-author-widget {
+    margin: 0.5em 0;
+}
+
+.comment-author-name {
+    color: #F26101;
+    margin-left: 0.5em;
+}
+
+.comment-ts {
+    color: gray;
+}
+
+.comment-toolbar {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.comment-body {
+    flex: 0 1 100%;
+    margin: 0;
+    color: #333;
+}

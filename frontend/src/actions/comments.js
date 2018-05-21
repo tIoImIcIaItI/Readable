@@ -70,20 +70,17 @@ export const addComment = ({ id, timestamp, body, author, parentId }) => dispatc
 			headers: jsonHeaders,
 			method: 'POST',
 			body: JSON.stringify({ id, timestamp, body, author, parentId })
-		}).
-		then(res => {
+		}).then(res => {
 			if (res.ok)
 				return res.json();
 
 			throw new Error('TODO');
-		}).
-		then(comment => {
+		}).then(comment => {
 			dispatch(
 				commentAdded(
 					comment));
-		}).
-		catch(console.error)
-}
+		}).catch(console.error);
+};
 
 export function commentAdded(comment) {
 	return {
@@ -92,7 +89,7 @@ export function commentAdded(comment) {
 	};
 }
 
-export const updateComment = ({id, timestamp, body}) => dispatch => {
+export const updateComment = ({ id, timestamp, body }) => dispatch => {
 	fetch(`http://${api}/comments/${id}`,
 		{
 			headers: jsonHeaders,
@@ -110,8 +107,8 @@ export const updateComment = ({id, timestamp, body}) => dispatch => {
 				commentUpdated(
 					comment));
 		}).
-		catch(console.error)
-}
+		catch(console.error);
+};
 
 export function commentUpdated(comment) {
 	return {
@@ -137,8 +134,8 @@ export const deleteComment = (id) => dispatch => {
 				commentDeleted(
 					comment));
 		}).
-		catch(console.error)
-}
+		catch(console.error);
+};
 
 export function commentDeleted({ id, parentId }) {
 	return {
@@ -168,7 +165,7 @@ const vote = (id, option, dispatch) => {
 				commentVotesUpdated(
 					comment));
 		}).
-		catch(console.error)
+		catch(console.error);
 };
 
 export function commentVotesUpdated(comment) {

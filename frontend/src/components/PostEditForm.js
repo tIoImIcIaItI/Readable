@@ -90,14 +90,12 @@ class PostEditForm extends Component {
 				</div>
 
 				<Button variant='flat'
-				onClick={cancelEditPost}>
-					{/*<FontAwesomeIcon icon='ban' />*/}
+					onClick={cancelEditPost}>
 					<span >cancel</span>
 				</Button>
 
 				<Button variant='raised' color="primary"
-				type='submit'>
-					{/*<FontAwesomeIcon icon='save' />*/}
+					type='submit'>
 					<span >save</span>
 				</Button>
 

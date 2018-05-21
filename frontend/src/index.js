@@ -8,7 +8,6 @@ import configureStore from './store/configureStore';
 import { fetchCategories } from './actions/categories';
 import { fetchPosts } from './actions/posts';
 import App from './App';
-import './index.css';
 
 const store = configureStore();
 

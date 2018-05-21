@@ -8,6 +8,7 @@ import PostsSortSelector from './PostsSortSelector';
 import PostListItem from './PostListItem';
 import PostEditForm from './PostEditForm';
 import Stat from './Stat';
+import '../styles/posts.css';
 
 const orderBy = (arr, prop) => (arr || []).sort((x, y) => x[prop] - y[prop]);
 const orderByDescending = (arr, prop) => (arr || []).sort((x, y) => y[prop] - x[prop]);
@@ -21,13 +22,13 @@ class PostsList extends Component {
 		sortAscending: true,
 		sortCriteria: [
 			{
-				label: 'Date',
+				label: 'date',
 				field: 'timestamp',
 			},
 			{
-				label: 'Score',
+				label: 'votes',
 				field: 'voteScore'
-			},
+			}
 		],
 		isCreatingPost: false
 	};
@@ -89,7 +90,7 @@ class PostsList extends Component {
 		const numPosts = postsToDisplay.length;
 
 		return (
-			<div>
+			<section>
 				<h2 className='sr-only'>Posts</h2>
 
 				{isCreatingEntity ? (
@@ -108,12 +109,12 @@ class PostsList extends Component {
 								criteria={this.state.sortCriteria}
 								setSort={this.sortPosts} />
 
-							<Stat 
+							<Stat
 								label={numPosts !== 1 ? 'posts' : 'post'}
 								icon='newspaper'
 								value={numPosts}
 								direction='column-reverse'
-								display={{icon: true, label: false}}
+								display={{ icon: true, label: false }}
 							/>
 
 							<Button variant='fab' color='primary'
@@ -135,7 +136,7 @@ class PostsList extends Component {
 					</div>
 				)}
 
-			</div>
+			</section>
 		);
 	}
 }
@@ -154,4 +155,3 @@ const mapDispatchToProps = {
 export default connect(
 	mapStateToProps, mapDispatchToProps
 )(PostsList);
-

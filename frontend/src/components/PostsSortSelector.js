@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Button from 'muicss/lib/react/button';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import '../styles/sort.css';
 
 class PostsSortSelector extends Component {
 
@@ -15,17 +17,21 @@ class PostsSortSelector extends Component {
 				{(this.props.criteria || []).map(c =>
 					<div key={c.field}>
 
-						<button	onClick={() => this.props.setSort(c.field, true)}>
-							<FontAwesomeIcon icon='sort-up' />
-							{c.label}
-							<span className='sr-only'>ascending</span>
-						</button>
+						<span className='sort-label'>{c.label}</span>
 
-						<button	onClick={() => this.props.setSort(c.field, false)}>
+						<Button
+							onClick={() => this.props.setSort(c.field, true)}>
+							<FontAwesomeIcon icon='sort-up' />
+							{/*{c.label}*/}
+							<span className='sr-only'>ascending</span>
+						</Button>
+
+						<Button
+							onClick={() => this.props.setSort(c.field, false)}>
 							<FontAwesomeIcon icon='sort-down' />
-							{c.label}
+							{/*{c.label}*/}
 							<span className='sr-only'>descending</span>
-						</button>
+						</Button>
 					</div>
 				)}
 			</div>

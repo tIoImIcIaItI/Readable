@@ -87,7 +87,7 @@ class PostDetail extends Component {
 
 					<div className='post-subheader'>
 						<div className='post-author-widget'>
-							<span className='post-author-tag'>{tag}</span>
+							<span className='post-author-tag author-tag'>{tag}</span>
 							<span className='post-author-name'>{post.author}</span>
 						</div>
 
@@ -104,35 +104,35 @@ class PostDetail extends Component {
 						savePost={this.savePost}
 						cancelEditPost={this.cancelEditPost} />
 				) : (
-						<div>
-							<div className='post-content'>
+					<div>
+						<div className='post-content'>
 
-								<VoteScore
-									direction='column'
-									score={post.voteScore}
-									voteUp={() => voteUp(post.id)}
-									voteDown={() => voteDown(post.id)} />
+							<VoteScore
+								direction='column'
+								score={post.voteScore}
+								voteUp={() => voteUp(post.id)}
+								voteDown={() => voteDown(post.id)} />
 
-								<div className='post-body'>{post.body}</div>
+							<div className='post-body'>{post.body}</div>
 
-								<div className='post-toolbar'>
-									<Button onClick={this.editPost}>
-										<FontAwesomeIcon icon='pencil-alt' />
-										<span className='sr-only'>edit post</span>
-									</Button>
+							<div className='post-toolbar'>
+								<Button onClick={this.editPost}>
+									<FontAwesomeIcon icon='pencil-alt' />
+									<span className='sr-only'>edit post</span>
+								</Button>
 
-									<Button onClick={() => deletePost(post.id)}>
-										<FontAwesomeIcon icon='trash-alt' />
-										<span className='sr-only'>delete post</span>
-									</Button>
-								</div>
-
+								<Button onClick={() => deletePost(post.id)}>
+									<FontAwesomeIcon icon='trash-alt' />
+									<span className='sr-only'>delete post</span>
+								</Button>
 							</div>
 
-							<CommentsList
-								postId={id} />
 						</div>
-					)}
+
+						<CommentsList
+							postId={id} />
+					</div>
+				)}
 
 			</article>
 		);

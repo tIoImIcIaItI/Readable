@@ -1,24 +1,20 @@
 .stat-widget {
-  /*color: gray;*/
-  display: flex;
-  /*flex-direction: column-reverse;*/
-  align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .stat-icon {
-	display: block;
-  /*font-size: 2em;*/
-  color: gray;
+    display: block;
+    color: gray;
 }
 
 .stat-label {
-	color: gray;
-	font-size: 0.7rem;
+    color: gray;
+    font-size: 0.7rem;
 }
 
 .stat-count {
-  /*margin-left: 0.5em;*/
-  display: block;
-  color: #F26101
+    display: block;
+    color: #F26101
 }
